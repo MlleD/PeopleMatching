@@ -1,0 +1,75 @@
+Devoir maison de Programmation Web : application d’appariement social
+Dorothée Huynh
+L3 Informatique Année 2018-2019
+
+Outils utilisés
+
+côté serveur
+NodeJS, expressjs, bodyparser
+JQuery côté client
+Base de données côté serveur pour gérer les utilisateurs et les appariements : mysql
+
+Paquets npm à installer (en plus de NodeJS):
+express
+ejs 
+JQuery
+mysql
+
+Fonctionnalités demandées
+
+Profil utilisateur
+Recherche d'autres utilisateurs
+Création d’un compte
+Login
+Modification du profil et des préférences
+Parcours des profils d’autres personnes pour les « aimer » ou non.
+
+Fonctionnalités implémentées
+
+- Page d'accueil
+Disponible à l'url "http://localhost:8080", elle contient deux liens : 
+un pour se connecter, un pour créer un compte.
+
+- Connexion
+La connexion s'effectue via un formulaire accessible à l'url : http://localhost:8080/login".
+
+- Profil utilisateur
+Le profil de l'utilisateur, accessible à l'url http://localhost:8080/profile/iduser/ 
+
+- Modification du profil utilisateur
+Accessible à l'url http://localhost:8080/profile/iduser/change
+A l'heure actuelle, je n'ai pu implémenter que la Modification de mot de passe. Cependant, le jquery n'est pas "reconnu" côté client (erreur visible en console).
+
+- Recherche d'un centre d'intérêt et affichage des resultats : autre utilisateur
+Cette Fonctionnalité n'est pas "testable" côté client non plus.
+Pour la tester manuellement, il faut faire une requete au serveur NodeJS en écrivant par exemple l'url:
+http://localhost:8080/search?query=Tennis&iduser=1
+Résultats sous la forme : Utilisateur 2 : (3) 
+id de l'utilisateur et degré (entre 1 et 5) d'appréciation du tennis
+
+- Exemples de vérification :
+A la création de compte, il y a la vérification que le mot de passe est écrit 2 fois (2x) et des emails.
+Pour login et signin il y a la vérification que les champs texte ne contiennent pas des caractères " (sinon ça casse les requêtes SQL).
+
+- Problème avec les redirections : 
+seule solution trouvée: 
+à la connexion, le serveur renvoie l'url
+le client jquery effectue la redirection
+
+
+Routes
+/ : accueil
+/ : 
+
+Bdd
+Connexion : id, mdp
+Appariement : iduser1, iduser2
+Aime: iduser, cat-gout, degre
+
+ex.
+- categorie goût : sport, cinema, mode
+- degre : 1 à 5
+
+à faire vendredi soir :
+- Script sql de remplissage Bdd
+- Corriger bug de non-recherche dans l'input de recherche de centre d'intérêt

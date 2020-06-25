@@ -1,0 +1,34 @@
+<form id='search' method="GET">
+    <div>
+        <select id="search-category-select">
+            <option value="interest">Centre d'intérêt</option>
+            <option value="name">Nom</option>
+            <option value="country">Pays</option>
+        </select>
+        <input type="search-input" name="" id="<%= id %>" pattern="\w+" placeholder="Chercher...">
+        <button id="search-button">Rechercher</button>
+    </div>
+</form>
+<div id="#results" >
+     <% if (search_results) search_results.forEach(function(res) { %>
+    <a href="/profile/<%= res.id_user %>">
+        Utilisateur <%= res.id_user %> : <%= res.name %> (<%= res.degree %>)
+    </a>
+    <% }); %>
+</div>
+<script src="/jquery-3.3.1.min.js"></script>
+<script>
+    $('#search').ready(function () {
+        $('#search-input').change(function (event) {
+            $.get('/search', {iduser: $(this).attr('id'), query: $(this).val()})
+        });
+        $('#search-button').click(function (event) {
+            $.get('/search', {iduser: $('search-input').attr('id'), query: $('search-input').val()});
+        });
+    });
+</script>
+    <!-- 
+Clic sur le bouton rechercher : affiche page de resultats uri /search?q=yyyy
+en cours de saisie : afficher liste de n suggestion (liens cliquables) /suggest?q=yyyy
+
+ -->

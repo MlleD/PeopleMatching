@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Modification du profil</title>
+</head>
+
+<body>
+    <h1><%= infos.firstname %> <%= infos.lastname %></h1>
+    <p>Né(e) le <p id="birthdate"><%= infos.birthdate %></p>
+    </p>
+    <p>Habite au/en <%= infos.country %></p>
+    <p>Email : <%= infos.email%></p>
+    <div id="password">
+    Changer de mot de passe :
+    <form id="password-form" method="POST">
+        <input type="password" name="password" id="password-input" placeholder="Mot de passe" value="<%= infos.password%>" required="true">
+    </form>
+    </div>
+    <div id="interests">
+    <p id="updateInterest"> Mettre à jour les centres d'intérêts </p>
+    <p id="addInterest">Ajouter un centre d'intérêt</a></p>
+    </div>
+    </form>
+    <div id="results">
+    </div>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script>
+        $('#password-form').focusin(function() {
+            if(!$('#password-submit')) {
+                $(this).append('<input type="submit" id="password-submit" value="Envoyer">');
+            }           
+        });
+        $('#password-form').submit(function() {
+            let iduser = window.location.pathname.split('/')[2];
+            $.post('/profile/' + iduser + '/change/password', {newpassword: $('#password-submit').val()});
+        });
+    </script>
+</body>
+
+</html>

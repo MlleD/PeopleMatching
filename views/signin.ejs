@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Création de compte</title>
+</head>
+
+<body>
+    <input type="text" name="firstname" id="firstname" placeholder="Prénom" required="true">
+    <input type="text" name="lastname" id="lastname" placeholder="Nom" required="true">
+    <input type="date" name="birthdate" id="birthdate" required="true">
+    <input type="text" name="country" id="country" placeholder="Pays">
+    <input type="email" name="email" id="email1" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Email" required="true">
+    <input type="email" name="email" id="email2" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Email" required="true">
+    <input type="password" name="password" id="password1" placeholder="Mot de passe" required="true">
+    <input type="password" name="password" id="password2" placeholder="Mot de passe" required="true">
+    <input type="submit" id="submit" value="Envoyer">
+    <a href="/login">Vous avez déjà un compte ? Connectez-vous !</a>
+    <div id="results">
+        <%= error %>
+    </div>
+    <script src="jquery-3.3.1.min.js"></script>
+    <script>
+        function getAge(date) {
+            const datetime = new Date(date);
+            const now = new Date();
+            let age = now.getUTCFullYear() - datetime.getUTCFullYear();
+            if (datetime.getUTCMonth() > now.getUTCMonth() ||
+                (datetime.getUTCMonth() == now.getUTCMonth() && datetime.getUTCDate() > now.getUTCDate())) {
+                age--;
+            }
+            return age;
+        }
+        $(document).ready(function () {
+            $("input[name='email']").focusin(function () {
+                $(this).css('border', '1px solid black');
+            });
+            $("input[name='password']").focusin(function () {
+                $(this).css('border', '1px solid black');
+            });
+            $('#submit').click(function (e) {
+                e.preventDefault();
+                //Retirer le texte + html des éventuelles erreurs
+                $('#results').empty();
+                let err = "";
+                // Vérification des champs email et password :
+                // les deux champs email doivent avoir le meme contenu, de même pour password
+                if ($('#email1').val() != $('#email2').val()) {
+                    err = err + "<p>Vous n'avez écrit pas le même email deux fois.</p>";
+                    $("input[name='email']").css('border', '2px solid red');
+                }
+                else if ($('#password1').val() != $('#password2').val()) {
+                    err = err + "<p>Vous n'avez écrit pas le même mot de passe deux fois.</p>";
+                    $("input[name='password']").css('border', '2px solid red');
+                }
+                // Vérification que la date de naissance est au moins 18 ans avant la date actuelle
+                else if ((getAge($('#birthdate').val()) < 18)) {
+                    err = err + "<p>Vous devez avoir 18 ans pour vous créer un compte.</p>";
+                }
+                if (err) {
+                    $('#results').html(err);
+                }
+                else {
+                    $.post('/signin', {
+                        email: $('#email1').val().replace('"', ''),
+                        password: $('#password1').val().replace('"', ''),
+                        firstname: $('#firstname').val().replace('"', ''),
+                        lastname: $('#lastname').val().replace('"', ''),
+                        birthdate: $('#birthdate').val().replace('"', ''),
+                        country: $('#country').val().replace('"', '')
+                    },
+                        function (data) {              
+                            if (data.redirect) {
+                                window.location.href = data.redirect;
+                            }
+                            else {
+                                $('#results').html(data.error);
+                            }
+                        }
+                    );
+                }
+            });
+        });        
+    </script>
+</body>
+
+</html>

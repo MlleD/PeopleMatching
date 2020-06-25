@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Profil</title>
+</head>
+<body>
+    <div id="search-div"><% include search %></div>
+    <a href=
+    <div id="infos-div">
+        <h1><%= firstname %> <%= lastname %></h1>
+        Mes gouts :
+        <ul>
+            <% interests.forEach(function(interest) { %>
+            <li><%= interest.name %> : <%= interest.degree %> </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>
