@@ -20,7 +20,7 @@ var database = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "jsapp",
+  database: "PeopleMatching",
   multipleStatements: true
 });
 database.connect();
