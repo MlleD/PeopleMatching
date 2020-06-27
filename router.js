@@ -22,10 +22,10 @@ server.post('/signin', function(request, response) {
         response.status(404).json({errors: errors.array()});
         response.end();
     } else {
-        let query = 'INSERT INTO Users(email, password, firstname, lastname, birthdate, country)'
+        let query = 'INSERT INTO User(email, password, firstname, lastname, birthdate, country, sex)'
         + 'VALUES("' + request.body.email + '", "' + request.body.password + '", "'
         + request.body.firstname + '", "' + request.body.lastname + '", "' + request.body.birthdate
-        + '", "' + request.body.country + '")';
+        + '", "' + request.body.country + '", "' + request.body.sex + '")';
         database.query(query, function(err, result) {
             if (err) {
                 if (err.code == 'ER_DUP_ENTRY') {
@@ -50,7 +50,7 @@ server.post('/login', function (request, response) {
         response.status(404).json({errors: errors.array()});
         response.end();
     } else {
-        const query = "SELECT * FROM Users WHERE email = '" + request.body.email + "' AND password = '" + request.body.password + "'";
+        const query = "SELECT * FROM User WHERE email = '" + request.body.email + "' AND password = '" + request.body.password + "'";
         database.query(query, function (err, result) {
             if (err) throw err;
             if (!result.length) {
@@ -63,16 +63,16 @@ server.post('/login', function (request, response) {
 });
 
 server.get('/profile/:iduser', function (request, response) {
-    let query = `SELECT firstname, lastname FROM Users WHERE users.id_user =` + request.params.iduser;
+    let query = `SELECT firstname, lastname FROM User WHERE id_user =` + request.params.iduser;
     database.query(query, function(err, resName) {
         if (err) throw err;
         if(!resName.length) {
             response.send("Aucun utilisateur n'a cet identifiant utilisateur");
         }
         else {
-            query = `SELECT name, degree FROM appreciate, interest 
-            WHERE appreciate.id_user = ` + request.params.iduser +
-                ` AND appreciate.id_interest = interest.id_interest`;
+            query = `SELECT name, degree FROM Appreciate INNER JOIN Interest 
+            on Appreciate.id_user = ` + request.params.iduser +
+                ` AND Appreciate.id_interest = Interest.id_interest`;
             database.query(query, function (err, resInterests) {
                 if (err) throw err;
                 response.render('profile.ejs', {
@@ -95,9 +95,9 @@ server.get('/search/form', function(request, response) {
 //url : search?query=Tennis&iduser=1
 server.get('/search', function (request, response) {
     //(iduser, degree) des users aimant le centre d'interet cherché
-    const query = 'SELECT a1.id_user, a1.degree FROM appreciate a1 ' +
-    'INNER JOIN interest i ON i.name = "' + capitalizeFirstLetter(request.query.query) +
-    '" WHERE a1.id_interest IN (SELECT id_interest FROM appreciate WHERE id_user = ' + request.query.iduser +
+    const query = 'SELECT a1.id_user, a1.degree FROM Appreciate a1 ' +
+    'INNER JOIN Interest i ON i.name = "' + capitalizeFirstLetter(request.query.query) +
+    '" WHERE a1.id_interest IN (SELECT id_interest FROM Appreciate WHERE id_user = ' + request.query.iduser +
     ') HAVING a1.id_user <> ' + request.query.iduser;
     database.query(query, function (err, result) {
         if (err) throw err;
@@ -106,9 +106,9 @@ server.get('/search', function (request, response) {
 });
 
 server.get('/profile/:iduser/change',function(request, response) {
-    let query = `SELECT * FROM Users WHERE users.id_user = ?
-    ; SELECT name, degree FROM appreciate a 
-    JOIN interest i ON a.id_interest = i.id_interest
+    let query = `SELECT * FROM User WHERE user.id_user = ?
+    ; SELECT name, degree FROM Appreciate a 
+    JOIN Interest i ON a.id_interest = i.id_interest
     WHERE a.id_user = ?`;
     database.query(query, [request.params.iduser, request.params.iduser],function(err, result) {
         if (err) throw err;

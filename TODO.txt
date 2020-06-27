@@ -1,8 +1,11 @@
 A faire
 - Verifier la date de naissance < curdate()
-- Utiliser le script pour remplir la BDD Mysql : 
-par exemple, "mysql db_name < text_file"
 - Corriger les bugs dans le site web
+- Revoir les templates : 
+- - Mettre en place qur toutes les pages :
+- - - un header contenant PeopleMatching (lien vers page d'accueil)
+- - - un footer avec un copyright et année
+- - Dans les vues login et signin : ajouter un lien vers la page d'accueil
 
 Fait:
 27/06/2020: BDD PeopleMatching
@@ -10,3 +13,5 @@ Fait:
 - Revoir le script SQL de création des tables
 - Faire le script SQL pour remplir non manuellement la base de données
 - Utiliser les scripts SQL pour remplir la BDD : commande "mysql db_name < text_file"
+- Revoir le routeur : 
+- - Refaire les requêtes SQL pour qu'elles s'exécutent sur la BDD mise à jour
