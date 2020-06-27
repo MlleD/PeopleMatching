@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "router.js",
   "dependencies": {
+    "country-list": "^2.2.0",
     "ejs": ">=2.3.3",
     "express": "^4.17.1",
     "express-validator": "^5.3.1",

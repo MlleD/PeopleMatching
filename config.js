@@ -13,6 +13,7 @@ server.set('view engine', 'ejs');
 server.use(express.static('controllers'));
 server.use(express.static('libs'));
 server.use(express.static('lists'));
+server.use(express.static('css'));
 
 var mysql = require('mysql');
 

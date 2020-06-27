@@ -4,7 +4,7 @@
 3. Ecrire dans un terminal node router.js
 
 ### Mise en place sous Ubuntu
-1. Vérifier que les paquets suivants sont installés : express
+1. Vérifier que les paquets suivants sont installés : express,  country-list
 Sinon les installer avec la commande : npm install -latest (nom_du_paquet)
 2. Se mettre dans le dossier PeopleMatching
 3. Créer la base de données MySQL PeopleMatching

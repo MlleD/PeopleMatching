@@ -1,0 +1,33 @@
+.navbar .wrapper {
+    background-color: indigo;
+}
+
+.navbar-brand {
+    color: pink;
+    font-size: 20pt;
+    text-decoration: none;
+    position: relative;
+    margin-left: 40%;
+    transform: translate(-50%, -50%); 
+}
+
+.navbar .navbar-right {
+    text-align: right;
+    padding: 0.5em;
+}
+
+.navbar .navbar-right li {
+    display: inline-block;
+    list-style: none;
+    margin-top: 0.3em;
+    margin-right: 0.8em;
+}
+
+.navbar .navbar-right li a {
+    color: white;
+    text-decoration: none;
+}
+
+.navbar .navbar-right li a:hover {
+    text-decoration: underline;
+}

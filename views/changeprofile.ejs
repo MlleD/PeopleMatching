@@ -4,9 +4,12 @@
 <head>
     <meta charset="utf-8">
     <title>Modification du profil</title>
+    <link rel="stylesheet" type="text/css" href="header.css" />
+    <link rel="stylesheet" type="text/css" href="footer.css" /> 
 </head>
 
 <body>
+    <%- include('header'); -%>
     <h1><%= infos.firstname %> <%= infos.lastname %></h1>
     <p>Né(e) le <p id="birthdate"><%= infos.birthdate %></p>
     </p>
@@ -37,6 +40,7 @@
             $.post('/profile/' + iduser + '/change/password', {newpassword: $('#password-submit').val()});
         });
     </script>
+    <%- include('footer'); -%>
 </body>
 
 </html>

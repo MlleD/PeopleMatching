@@ -1,0 +1,11 @@
+body #signin-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: auto;
+    margin: 10px;
+}
+
+body h1 {
+    text-align: center;
+}

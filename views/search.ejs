@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche</title>
+</head>
+<body>
+<%- include('header'); -%>
 <form id='search' method="GET">
     <div>
         <select id="search-category-select">
@@ -32,3 +41,6 @@ Clic sur le bouton rechercher : affiche page de resultats uri /search?q=yyyy
 en cours de saisie : afficher liste de n suggestion (liens cliquables) /suggest?q=yyyy
 
  -->
+ <%- include('footer'); -%>
+</body>
+</html>

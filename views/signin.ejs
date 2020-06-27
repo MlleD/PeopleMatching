@@ -4,23 +4,58 @@
 <head>
     <meta charset="utf-8">
     <title>Création de compte</title>
+    <link rel="stylesheet" type="text/css" href="header.css" />
+    <link rel="stylesheet" type="text/css" href="footer.css" />
+    <link rel="stylesheet" type="text/css" href="signin.css" />
 </head>
 
 <body>
-    <input type="text" name="firstname" id="firstname" placeholder="Prénom" required="true">
-    <input type="text" name="lastname" id="lastname" placeholder="Nom" required="true">
-    <input type="date" name="birthdate" id="birthdate" required="true">
-    <input type="text" name="country" id="country" placeholder="Pays">
-    <input type="email" name="email" id="email1" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Email" required="true">
-    <input type="email" name="email" id="email2" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Email" required="true">
-    <input type="password" name="password" id="password1" placeholder="Mot de passe" required="true">
-    <input type="password" name="password" id="password2" placeholder="Mot de passe" required="true">
-    <input type="submit" id="submit" value="Envoyer">
-    <a href="/login">Vous avez déjà un compte ? Connectez-vous !</a>
-    <div id="results">
-        <%= error %>
-    </div>
+    <%- include('header'); -%>
+    <h1>Création de compte</h1>
+    <form id="signin-form">
+        <input type="text" name="firstname" id="firstname" placeholder="Prénom" required="true">
+        <input type="text" name="lastname" id="lastname" placeholder="Nom" required="true">
+        <label for="birthdate">Date de naissance (18+)</label>
+        <input type="date" name="birthdate" id="birthdate" required="true">
+
+        <label for="country_select">Pays : </label>
+        <select id="country_select"></select>
+        <label for="sex_select">Sexe : </label>
+        <select id="sex_select" >
+            <option value="choice" selected>-- Choisir --</option>
+            <option value="fvalue">Féminin</option> 
+            <option value="mvalue" >Masculin</option>
+            <option value="navalue">N/A</option>
+        </select>
+        <input type="email" name="email" id="email1" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Email" required="true">
+        <input type="email" name="email" id="email2" pattern="[^@\s]+@[^@\s]+\.[^@\s]+" placeholder="Email" required="true">
+        <input type="password" name="password" id="password1" placeholder="Mot de passe" required="true">
+        <input type="password" name="password" id="password2" placeholder="Mot de passe" required="true">
+        <input type="submit" id="submit" value="Envoyer">
+        <a href="/login">Vous avez déjà un compte ? Connectez-vous !</a>
+        <div id="results">
+            <%= error %>
+        </div>
+    </form>
+    
     <script src="jquery-3.3.1.min.js"></script>
+    <script>
+        //Affichage du drop-down des pays
+        const countries_list = '<%= countries %>'.split(",");
+        let country_select = document.getElementById("country_select");
+        for (let country of countries_list) {
+            const opt = document.createElement("option");
+            opt.setAttribute("value", country);
+            opt.innerHTML = country;
+            country_select.appendChild(opt);
+        };
+
+        // Limitation de la date maximale de l'input type date
+        const date_input = document.getElementById("birthdate");
+        const today = new Date();
+        const maxdate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+        date_input.setAttribute("max", maxdate.toISOString().split('T')[0])
+    </script>
     <script>
         function getAge(date) {
             const datetime = new Date(date);
@@ -83,6 +118,7 @@
             });
         });        
     </script>
+    <%- include('footer'); -%>
 </body>
 
 </html>

@@ -1,11 +1,10 @@
 A faire
-- Verifier la date de naissance < curdate()
-- Corriger les bugs dans le site web
+- Corriger les éventuels bugs dans le site web
 - Revoir les templates : 
-- - Mettre en place qur toutes les pages :
-- - - un header contenant PeopleMatching (lien vers page d'accueil)
-- - - un footer avec un copyright et année
-- - Dans les vues login et signin : ajouter un lien vers la page d'accueil
+- - Profil : ajouter l'ajout d'un centre d'intérêt quand on en a pas 
+- - Changement du profil
+- - Recherche de personnes
+- Vérifier que la création de compte fonctionne
 
 Fait:
 27/06/2020: BDD PeopleMatching
@@ -15,3 +14,13 @@ Fait:
 - Utiliser les scripts SQL pour remplir la BDD : commande "mysql db_name < text_file"
 - Revoir le routeur : 
 - - Refaire les requêtes SQL pour qu'elles s'exécutent sur la BDD mise à jour
+
+27/06/2020: Site et templates
+- Verifier la date de naissance < curdate() : l'attribut max délimite la date de naissance minimale (18 ans)
+- Revoir les templates : 
+- - Mettre en place sur toutes les pages :
+- - - un header contenant PeopleMatching (lien vers page d'accueil) + son style CSS, et un menu de navigation contentant 4 liens (accueil, connexion, a propos de, contact)
+- - - un footer avec un copyright et année + son style CSS
+- - Creation de compte : le formulaire contient des énumérations pour le pays de résidence et le sexe
+- - Ajout de deux nouvelles pages : contact (adresse mail), et à propos de (ce site étant un projet scolaire de programmation)
+- - Ajout des categories dans la liste de centres d'intérêt

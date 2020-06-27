@@ -13,7 +13,11 @@ server.get('/', function (request, response) {
 });
 
 server.get('/signin', function(request, response) {
-    response.render('signin.ejs', {error: request.body.error});
+    const country_list = require('country-list');
+    response.render('signin.ejs', {
+        error: request.body.error,
+        countries: country_list.getNames()
+    });
 });
 
 server.post('/signin', function(request, response) {
@@ -63,14 +67,14 @@ server.post('/login', function (request, response) {
 });
 
 server.get('/profile/:iduser', function (request, response) {
-    let query = `SELECT firstname, lastname FROM User WHERE id_user =` + request.params.iduser;
+    let query = `SELECT firstname, lastname FROM User WHERE id_user = ` + request.params.iduser;
     database.query(query, function(err, resName) {
         if (err) throw err;
         if(!resName.length) {
             response.send("Aucun utilisateur n'a cet identifiant utilisateur");
         }
         else {
-            query = `SELECT name, degree FROM Appreciate INNER JOIN Interest 
+            query = `SELECT category, name, degree FROM Appreciate INNER JOIN Interest 
             on Appreciate.id_user = ` + request.params.iduser +
                 ` AND Appreciate.id_interest = Interest.id_interest`;
             database.query(query, function (err, resInterests) {
@@ -114,6 +118,14 @@ server.get('/profile/:iduser/change',function(request, response) {
         if (err) throw err;
         response.render('changeprofile.ejs', {infos: result[0][0], interests: result[1]});
     });
+});
+
+server.get('/about', function (request, response) {
+    response.render('about.ejs');
+});
+
+server.get('/contact', function (request, response) {
+    response.render('contact.ejs');
 });
 
 server.use(function(request, response){

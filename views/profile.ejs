@@ -3,18 +3,25 @@
 <head>
     <meta charset="utf-8">
     <title>Profil</title>
+    <link rel="stylesheet" type="text/css" href="../header.css" />
+    <link rel="stylesheet" type="text/css" href="../footer.css" />
 </head>
 <body>
-    <div id="search-div"><% include search %></div>
-    <a href=
+    <%- include('header'); -%>
     <div id="infos-div">
         <h1><%= firstname %> <%= lastname %></h1>
+        <%if (interests.length > 0) { %>
         Mes gouts :
-        <ul>
+        <ul> 
             <% interests.forEach(function(interest) { %>
-            <li><%= interest.name %> : <%= interest.degree %> </li>
+            <li> <%= interest.category %> <%= interest.name %> : 
+                <%= interest.degree %>/5 </li>
             <% }); %>
         </ul>
+        <% } else {%>
+        <p>Je n'ai pas de centre d'intérêt.</p>
+        <% } %>
     </div>
+    <%- include('footer'); -%>
 </body>
 </html>
