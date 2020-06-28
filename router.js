@@ -67,7 +67,12 @@ server.post('/login', function (request, response) {
 });
 
 server.get('/profile/:iduser', function (request, response) {
-    let query = `SELECT firstname, lastname FROM User WHERE id_user = ` + request.params.iduser;
+    let query = `SELECT firstname, lastname, country, birthdate, sex FROM User WHERE id_user = ` + request.params.iduser;
+    function age (birth) {
+        now = new Date()
+        ms_to_year = 1000 * 60 * 60 * 24 * 365;
+        return Math.floor(parseInt(now - birth) / ms_to_year);
+    }
     database.query(query, function(err, resName) {
         if (err) throw err;
         if(!resName.length) {
@@ -83,6 +88,9 @@ server.get('/profile/:iduser', function (request, response) {
                     id: request.params.iduser,
                     firstname: resName[0].firstname,
                     lastname: resName[0].lastname,
+                    country: resName[0].country,
+                    age: age(resName[0].birthdate),
+                    sex: resName[0].sex,
                     interests: resInterests,
                     search_results: []
                 }

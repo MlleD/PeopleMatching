@@ -5,11 +5,14 @@
     <title>Profil</title>
     <link rel="stylesheet" type="text/css" href="../header.css" />
     <link rel="stylesheet" type="text/css" href="../footer.css" />
+    <link rel="stylesheet" type="text/css" href="../profile.css" />
 </head>
 <body>
     <%- include('header'); -%>
     <div id="infos-div">
         <h1><%= firstname %> <%= lastname %></h1>
+        <h2><%= country %>, <%= age %> ans
+        </h2>
         <%if (interests.length > 0) { %>
         Mes gouts :
         <ul> 
