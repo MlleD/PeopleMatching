@@ -19,9 +19,11 @@
         <input type="date" name="birthdate" id="birthdate" required="true">
 
         <label for="country_select">Pays : </label>
-        <select id="country_select"></select>
+        <select id="country_select" required = "true">
+            <option value="choice" selected>-- Choisir --</option>
+        </select>
         <label for="sex_select">Sexe : </label>
-        <select id="sex_select" >
+        <select id="sex_select" required = "true">
             <option value="choice" selected>-- Choisir --</option>
             <option value="fvalue">Féminin</option> 
             <option value="mvalue" >Masculin</option>
@@ -85,13 +87,25 @@
                     err = err + "<p>Vous n'avez écrit pas le même email deux fois.</p>";
                     $("input[name='email']").css('border', '2px solid red');
                 }
+                else if ($('#email1').val() == "" || $('#email2').val() == ""){
+                    err = err + "<p>Veuillez écrire votre adresse email dans les deux champs concernés.</p>"
+                }
                 else if ($('#password1').val() != $('#password2').val()) {
                     err = err + "<p>Vous n'avez écrit pas le même mot de passe deux fois.</p>";
                     $("input[name='password']").css('border', '2px solid red');
                 }
+                else if ($('#password1').val() == "" || $('#passcord2').val() == ""){
+                    err = err + "<p>Veuillez écrire votre mot de passe dans les deux champs concernés.</p>"
+                }
                 // Vérification que la date de naissance est au moins 18 ans avant la date actuelle
                 else if ((getAge($('#birthdate').val()) < 18)) {
                     err = err + "<p>Vous devez avoir 18 ans pour vous créer un compte.</p>";
+                }
+                else if ($('#country_select').val() == 'choice') {
+                    err = err + "<p>Vous devez sélectionner votre pays de résidence.</p>";
+                }
+                else if ($('#sex_select').val() == 'choice') {
+                    err = err + "<p>Vous devez sélectionner votre sexe.</p>";
                 }
                 if (err) {
                     $('#results').html(err);
@@ -103,7 +117,8 @@
                         firstname: $('#firstname').val().replace('"', ''),
                         lastname: $('#lastname').val().replace('"', ''),
                         birthdate: $('#birthdate').val().replace('"', ''),
-                        country: $('#country').val().replace('"', '')
+                        country: $('#country_select').val().replace('"', ''),
+                        sex: $('#sex_select').val().replace('""', '')
                     },
                         function (data) {              
                             if (data.redirect) {

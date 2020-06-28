@@ -24,3 +24,7 @@ Fait:
 - - Creation de compte : le formulaire contient des énumérations pour le pays de résidence et le sexe
 - - Ajout de deux nouvelles pages : contact (adresse mail), et à propos de (ce site étant un projet scolaire de programmation)
 - - Ajout des categories dans la liste de centres d'intérêt
+
+28/06/2020
+- Vérification de la fonctionnalité de création de compte
+- Nouveau compte : hdorothee@live.fr 123
