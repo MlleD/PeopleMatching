@@ -3,14 +3,16 @@
 <head>
     <meta charset="utf-8">
     <title>Accueil</title>
-    <link rel="stylesheet" type="text/css" href="header.css" />
-    <link rel="stylesheet" type="text/css" href="footer.css" />
+    <link rel="stylesheet" type="text/css" href="../header.css" />
+    <link rel="stylesheet" type="text/css" href="../footer.css" />
 </head>
 <body>
-    <%- include('header'); -%>
+    <%- include('header', {id_user: id_user}); -%>
     <h1>Bienvenue sur la page d'accueil de People Matching !</h1>
+    <% if (!id_user) { %>
     <a href="/login">Se connecter</a>
     <a href="/signin">Créer un compte</a>
+    <% } %>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Velit, praesentium commodi voluptates illo facere tempore eligendi in tenetur modi saepe adipisci fugiat aut perspiciatis ut dolore voluptatem officiis animi exercitationem!</p>
     <%- include('footer'); -%>
 </body>

@@ -11,6 +11,16 @@
     transform: translate(-50%, -50%); 
 }
 
+#search-bar {
+    border-radius: 20px;
+    display: flex;
+    font-size: medium;
+    height: auto;
+    margin: auto;
+    text-align: center;
+    width: 80%;
+}
+
 .navbar .navbar-right {
     text-align: right;
     padding: 0.5em;

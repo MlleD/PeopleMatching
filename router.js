@@ -9,7 +9,11 @@ function capitalizeFirstLetter (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 server.get('/', function (request, response) {
-    response.render('home.ejs');
+    if (request.session.user) {
+        response.render('home.ejs', {id_user: request.session.user.id_user})
+    } else {
+        response.render('home.ejs', {id_user: null})
+    }
 });
 
 server.get('/signin', function(request, response) {
@@ -45,7 +49,7 @@ server.post('/signin', function(request, response) {
 
 
 server.get('/login', function (request, response) {
-    response.render('login.ejs', {error: request.body.error});
+    response.render('login.ejs', {error: request.body.error, id_user: request.user});
 });
 
 server.post('/login', function (request, response) {
@@ -60,13 +64,20 @@ server.post('/login', function (request, response) {
             if (!result.length) {
                 response.send({error: 'Email et/ou mot de passe incorrect'});
             } else {
-                response.send({redirect: '/profile/' + result[0].id_user});
+                request.session.user = result[0]
+                response.send({
+                    redirect: '/profile/' + result[0].id_user,
+                    //user: result[0]
+                })               
             }         
         });
     }
 });
 
 server.get('/profile/:iduser', function (request, response) {
+    if (!request.session.user) {
+        response.status(404).send("Vous devez être connecté pour voir le contenu de cette page.")
+    }
     let query = `SELECT firstname, lastname, country, birthdate, sex FROM User WHERE id_user = ` + request.params.iduser;
     function age (birth) {
         now = new Date()
@@ -85,7 +96,7 @@ server.get('/profile/:iduser', function (request, response) {
             database.query(query, function (err, resInterests) {
                 if (err) throw err;
                 response.render('profile.ejs', {
-                    id: request.params.iduser,
+                    id_user: request.params.iduser,
                     firstname: resName[0].firstname,
                     lastname: resName[0].lastname,
                     country: resName[0].country,
@@ -129,12 +140,28 @@ server.get('/profile/:iduser/change',function(request, response) {
 });
 
 server.get('/about', function (request, response) {
-    response.render('about.ejs');
+    if (request.session.user) {
+        response.render('about.ejs', {id_user: request.session.user.id_user});
+    } else {
+        response.render('about.ejs', {id_user: null});
+    }
 });
 
 server.get('/contact', function (request, response) {
-    response.render('contact.ejs');
+    if (request.session.user) {
+        response.render('contact.ejs', {id_user: request.session.user.id_user});
+    } else {
+        response.render('contact.ejs', {id_user: null});
+}});
+
+server.get('/logout', function (request, response) {
+    request.session.user = null
+    response.render('home.ejs', {id_user: null });
 });
+
+server.get('message/:id_user', function (request, response) {
+    response.render('message.ejs', {id_user: request.session.user.id_user})
+})
 
 server.use(function(request, response){
     response.send('On another page.');  

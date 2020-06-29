@@ -4,7 +4,21 @@ A faire
 - - Profil : ajouter l'ajout d'un centre d'intérêt quand on en a pas 
 - - Changement du profil
 - - Recherche de personnes
-- Vérifier que la création de compte fonctionne
+- - - Filtres de recherche
+- - - Affichage des résultats de recherche
+- Travail sur les templates :
+- - Page du profil (haut vers bas) :
+- - - Titre : nom, prénom
+- - - Sous-titre : pays, âge, sexe
+- - - Courte description (+ changement de texte)
+- - - Centres d'intérêt (+ add, - remove)
+- - - Mes photos (carousel, + add - remove)
+- - - Les personnes que j'ai liké (carousel, + add, - remove)
+- Gestion des sessions :
+- - Modification de la BDD pour gérer les infos :
+- - - Description sur le profil de l'utilisateur
+- - - Stockage des photos
+
 
 Fait:
 27/06/2020: BDD PeopleMatching
@@ -28,3 +42,11 @@ Fait:
 28/06/2020
 - Vérification de la fonctionnalité de création de compte
 - Nouveau compte : hdorothee@live.fr 123
+
+29/06/2020
+- Gestion des sessions d'utilisateurs OK. Les sessions sont indépendantes
+entre elles sont dans des navigateurs différents.
+- Le header incorpore maintenant des liens visibles quand l'utilisateur est 
+connecté : liens vers son profil, son compte, sa Messagerie, et un lien pour se déconnecter. Quand l'utilisateur n'est pas connecté. Il y a également dans la page d'accueil, un lien pour se connecter ou créer un compte.
+- Le header contient désormais une barre de recherche accessible si on est 
+connecté.

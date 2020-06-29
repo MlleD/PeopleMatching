@@ -19,6 +19,7 @@ var mysql = require('mysql');
 
 var database = mysql.createConnection({
   host: "localhost",
+  port: 3306,
   user: "root",
   password: "",
   database: "PeopleMatching",
@@ -26,4 +27,17 @@ var database = mysql.createConnection({
 });
 database.connect();
 
-module.exports = {server: server, database: database}
+var session = require('express-session');
+
+server.use(session({
+  resave: false, 
+  saveUninitialized: false, 
+  secret: 'Chuttt-Itis_a_Secret', 
+  cookie: { maxAge: 1000 * 60 * 60 * 24 * 365 } // one year
+}));
+
+module.exports = {
+  server: server, 
+  database: database,
+  session: session,
+}

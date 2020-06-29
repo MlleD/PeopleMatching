@@ -2,9 +2,19 @@
 <nav class="navbar">
     <div class="wrapper">
         <a href="/" class="navbar-brand">People Matching</a>
+        <% if (id_user) { %>
+            <input type="text" id="search-bar" placeholder="Je cherche..."/>
+        <% } %>
         <ul class="navbar-right">
             <li><a href="/">Accueil</a></li>
+            <% if (id_user) { %>
+            <li><a href="/profile/<%= id_user %>">Mon profil</a></li>
+            <li><a href="/account/<%= id_user %>">Mon compte</a></li>
+            <li><a href="/message/<%= id_user %>">Messagerie</a></li>
+            <li><a href="/logout/">Se déconnecter</a></li>
+            <% } else { %>
             <li><a href="/login">Se connecter</a></li>
+            <% } %>
             <li><a href="/about">A propos de</a></li>
             <li><a href="/contact">Contact</a></li>
         </ul>    
