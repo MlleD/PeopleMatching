@@ -20,7 +20,8 @@ server.get('/signin', function(request, response) {
     const country_list = require('country-list');
     response.render('signin.ejs', {
         error: request.body.error,
-        countries: country_list.getNames()
+        countries: country_list.getNames(),
+        id_user: request.session.id_user
     });
 });
 
@@ -41,7 +42,11 @@ server.post('/signin', function(request, response) {
                 }
             }
             else {
-                response.send({redirect: '/profile/' + result.insertId});
+                request.session.user = result.insertId
+                response.send({
+                    redirect: '/profile/' + result.insertId,
+                    id_user: result.insertId
+                });
             }
         });
     }
@@ -67,7 +72,7 @@ server.post('/login', function (request, response) {
                 request.session.user = result[0]
                 response.send({
                     redirect: '/profile/' + result[0].id_user,
-                    //user: result[0]
+                    id_user: result[0]
                 })               
             }         
         });
