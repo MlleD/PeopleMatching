@@ -16,10 +16,10 @@ VALUES
 ('etest@gm.fr', 'etest', 'Elisa', 'Mercuri', str_to_date('11-08-1990', '%d-%m-%Y'), 'France', 'Feminin');
 
 INSERT INTO Interest(name, category) VALUES
-('française', 'cuisine'), ('americaine', 'cuisine'), ('asiatique', 'cuisine'),
+('cuisine française', 'cuisine'), ('cuisine americaine', 'cuisine'), ('cuisine asiatique', 'cuisine'),
 ('romance', 'cinema'), ('drame', 'cinema'),
-('contemporaine', 'danse'), ('hip-hop', 'danse'), ('orientale', 'danse'), 
-('classique', 'musique'), ('française', 'musique'), ('rock', 'musique'), ('variété', 'musique'),
+('danse contemporaine', 'danse'), ('danse hip-hop', 'danse'), ('danse orientale', 'danse'), 
+('musique classique', 'musique'), ('musique française', 'musique'), ('musique rock', 'musique'), ('musique pop', 'musique'),
 ('basket-ball', 'sport'), ('football', 'sport'), ('gymnastique', 'sport'), ('natation', 'sport'), ('volley-ball', 'sport');
 
 INSERT INTO Appreciate(id_user, id_interest, degree) VALUES
@@ -29,4 +29,4 @@ INSERT INTO Appreciate(id_user, id_interest, degree) VALUES
 (4, 5, 4);
 
 INSERT INTO Matching(id_user1, id_user2) VALUES
-(3, 4)
+(3, 4);

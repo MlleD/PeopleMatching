@@ -95,7 +95,7 @@ server.get('/profile/:iduser', function (request, response) {
             response.send("Aucun utilisateur n'a cet identifiant utilisateur");
         }
         else {
-            query = `SELECT category, name, degree FROM Appreciate INNER JOIN Interest 
+            query = `SELECT name, degree FROM Appreciate INNER JOIN Interest 
             on Appreciate.id_user = ` + request.params.iduser +
                 ` AND Appreciate.id_interest = Interest.id_interest`;
             database.query(query, function (err, resInterests) {

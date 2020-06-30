@@ -54,3 +54,4 @@ connecté.
 30/06/2020
 - Templates : Le footer devient sticky
 - Sessions : Correction bug sur page d'inscription
+- BDD : renommage des centres d'intérêt dans la table des centres d'intérêt
