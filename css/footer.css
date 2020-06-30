@@ -1,6 +1,21 @@
+/* Implementation d'un sticky footer */
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex:1 0 auto;
+}
+
 footer {
     text-align: center;
     background-color: indigo;
     color: white;
-    padding: 3px;
+    flex-shrink: 0;
 }

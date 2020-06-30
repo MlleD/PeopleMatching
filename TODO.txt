@@ -50,3 +50,6 @@ entre elles sont dans des navigateurs différents.
 connecté : liens vers son profil, son compte, sa Messagerie, et un lien pour se déconnecter. Quand l'utilisateur n'est pas connecté. Il y a également dans la page d'accueil, un lien pour se connecter ou créer un compte.
 - Le header contient désormais une barre de recherche accessible si on est 
 connecté.
+
+30/06/2020
+- Templates : Le footer devient sticky

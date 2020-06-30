@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <%- include('header'); -%>
+    <%- include('header', {id_user: id_user}); -%>
     <h1>Création de compte</h1>
     <form id="signin-form">
         <input type="text" name="firstname" id="firstname" placeholder="Prénom" required="true">
