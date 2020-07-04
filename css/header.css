@@ -11,7 +11,7 @@
     transform: translate(-50%, -50%); 
 }
 
-#search-bar {
+/* #search-bar {
     border-radius: 20px;
     display: flex;
     font-size: medium;
@@ -19,7 +19,7 @@
     margin: auto;
     text-align: center;
     width: 80%;
-}
+} */
 
 .navbar .navbar-right {
     text-align: right;

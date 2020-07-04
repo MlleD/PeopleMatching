@@ -3,9 +3,6 @@ A faire
 - Revoir les templates : 
 - - Profil : ajouter l'ajout d'un centre d'intérêt quand on en a pas 
 - - Changement du profil
-- - Recherche de personnes
-- - - Filtres de recherche
-- - - Affichage des résultats de recherche
 - Travail sur les templates :
 - - Page du profil (haut vers bas) :
 - - - Titre : nom, prénom
@@ -19,6 +16,19 @@ A faire
 - - - Description sur le profil de l'utilisateur
 - - - Stockage des photos
 
+A faire si tout le reste est fait :
+- - Recherche multi_critère :
+- - Si on veut faire une recherche multicritère, on appuie sur le bouton filtre.
+    à droite du bouton qui envoie la requête.
+    Ce bouton filtre redirige vers une page permettant de sélectionner les
+    critères voulus. Si quelque chose était écrit dans la barre de recherche
+    au moment du clic, alors ce quelque chose reste écrit dans la barre de 
+    recherche après le changement de page. On reste sur un <select> pour P et 
+    pour CI.
+    Pour faciliter la lecture des choix, on met une option par select et 
+    par ligne. Le bouton "Filtre" ajoute une ligne de choix : opérations 
+    logiques ET et OU Possible entre les lignes
+- - Messagerie entre utilisateurs
 
 Fait:
 27/06/2020: BDD PeopleMatching
@@ -55,3 +65,33 @@ connecté.
 - Templates : Le footer devient sticky
 - Sessions : Correction bug sur page d'inscription
 - BDD : renommage des centres d'intérêt dans la table des centres d'intérêt
+
+04/07/2020 : Spécification sur la recherche de profils
+- Recherche de personnes ou de centres d'intérêt : soit on cherche une personne
+via une info personnelle (nom, prénom, pays, etc.), soit on cherche via un centre
+d'intérêt
+- La recherche se fait dans une page dédiée /search, accessible depuis le header.
+- Visuel de la recherche (gauche vers droite) :
+- - un bouton permettant de switcher entre personne (P) et centre d'intéret (CI)
+- - un bouton permettant de choisir un attribut :
+- - - Si P est sélectionné, alors les attributs seront : nom, prénom, pays, age, sexe
+- - - Si CI est sélectionné, alors les attributs seront : catégorie
+- - la barre de recherche avec placeholder "Je cherche..."
+- - un bouton loupe et la touche entrée déclenchent de la recherche
+
+- Point du 31/06/2020 au 04/07/2020 sur la recherche de profils
+- - Visuel de la recherche à un critère
+- - Logique de la recherche à un critère : on choisit une personne (P) ou un 
+    centre d'intérêt (CI) puis le nom de la catégorie : si (P), alors on chosit 
+    entre les attributs d'une personne (nom, prénom, âge, pays, sexe), si (CI) 
+    alors on choisit entre sport, musique, etc.
+- - Changer "birthdate" (BDD) en "age" (site), ne prendre en compte que l'âge.
+    Pour ce champ, on ajoute avant la barre de recherche un select pour
+    choisir le signe >, = ou <.
+- - Ajout d'une fonction stockée dans la BDD pour y calculer l'âge à partir
+    de la date de naissance
+- - Affichage des résultats de recherche (gauche vers droite) : lien vers le 
+    profil, prénom et nom, puis la catégorie (personne, centre d'intérêt)
+    et la sous-catégorie (pays, age, etc.) matchés ainsi
+    que la valeur matchée : exemple "age 25 ans"
+- - Centrer les items du formulaire de recherche de profils et le titre de la page

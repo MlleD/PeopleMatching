@@ -5,9 +5,18 @@ const database = config.database;
 const { body,validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
 
+// ---- FONCTIONS HELPER ----
 function capitalizeFirstLetter (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
+
+function age (birth) {
+    now = new Date()
+    ms_to_year = 1000 * 60 * 60 * 24 * 365;
+    return Math.floor(parseInt(now - birth) / ms_to_year);
+}
+
+// ----  ROUTES ---- 
 server.get('/', function (request, response) {
     if (request.session.user) {
         response.render('home.ejs', {id_user: request.session.user.id_user})
@@ -42,7 +51,7 @@ server.post('/signin', function(request, response) {
                 }
             }
             else {
-                request.session.user = result.insertId
+                request.session.user = {id_user: result.insertId}
                 response.send({
                     redirect: '/profile/' + result.insertId,
                     id_user: result.insertId
@@ -72,7 +81,7 @@ server.post('/login', function (request, response) {
                 request.session.user = result[0]
                 response.send({
                     redirect: '/profile/' + result[0].id_user,
-                    id_user: result[0]
+                    id_user: result[0].id_user
                 })               
             }         
         });
@@ -84,11 +93,6 @@ server.get('/profile/:iduser', function (request, response) {
         response.status(404).send("Vous devez être connecté pour voir le contenu de cette page.")
     }
     let query = `SELECT firstname, lastname, country, birthdate, sex FROM User WHERE id_user = ` + request.params.iduser;
-    function age (birth) {
-        now = new Date()
-        ms_to_year = 1000 * 60 * 60 * 24 * 365;
-        return Math.floor(parseInt(now - birth) / ms_to_year);
-    }
     database.query(query, function(err, resName) {
         if (err) throw err;
         if(!resName.length) {
@@ -116,22 +120,6 @@ server.get('/profile/:iduser', function (request, response) {
     });
 });
 
-server.get('/search/form', function(request, response) {
-    response.render('search.ejs', {search_results: []});
-});
-
-//url : search?query=Tennis&iduser=1
-server.get('/search', function (request, response) {
-    //(iduser, degree) des users aimant le centre d'interet cherché
-    const query = 'SELECT a1.id_user, a1.degree FROM Appreciate a1 ' +
-    'INNER JOIN Interest i ON i.name = "' + capitalizeFirstLetter(request.query.query) +
-    '" WHERE a1.id_interest IN (SELECT id_interest FROM Appreciate WHERE id_user = ' + request.query.iduser +
-    ') HAVING a1.id_user <> ' + request.query.iduser;
-    database.query(query, function (err, result) {
-        if (err) throw err;
-        response.render('search.ejs', { id: request.query.iduser, search_results: result });
-    });
-});
 
 server.get('/profile/:iduser/change',function(request, response) {
     let query = `SELECT * FROM User WHERE user.id_user = ?
@@ -142,6 +130,86 @@ server.get('/profile/:iduser/change',function(request, response) {
         if (err) throw err;
         response.render('changeprofile.ejs', {infos: result[0][0], interests: result[1]});
     });
+});
+
+server.get('/search', async function (request, response) {
+    async function get_query(req) {
+        if (req.query.category == 'person') {
+            return "SELECT Column_name as category FROM INFORMATION_SCHEMA.COLUMNS where table_name = 'User' AND Column_name not in ('id_user', 'password')"
+        } else if (req.query.category == 'interest') {
+            return "SELECT distinct(category) FROM Interest"
+        } else return "";
+    }
+    if (request.query.category) {
+        database.query(await get_query(request), async function (err, res_cat) {
+            if (err) throw err;
+            const age_index = await res_cat.findIndex(elt => elt.category == 'birthdate')
+            
+            if (age_index != -1) {
+                res_cat[age_index] = {category: 'age'};
+            }
+            
+            response.status(200).send({
+                categories: await res_cat, // liste de RowDataPacket
+                id_user: request.session.user.id_user,
+                search_results: []
+            }); 
+        });
+    } else {
+        response.render('search.ejs', {
+            id_user: request.session.user.id_user,
+            categories: [],
+            search_results: []
+        })    
+    }
+});
+
+server.post('/search', async function (request, response) {
+    async function get_query(request) {
+        if (request.body.category == 'interest') {
+            return`SELECT a.id_user, u.firstname, u.lastname, a.id_interest, i.category, i.name, a.degree 
+            FROM Appreciate as a 
+            INNER JOIN Interest as i ON i.id_interest = a.id_interest 
+            INNER JOIN User as u ON a.id_user = u.id_user 
+            WHERE i.category = '` + request.body.name + "' AND i.name LIKE '%" + request.body.input + "%' AND a.id_user <> '" + request.session.user.id_user + "'";
+        } else { // request.body.category == 'person'
+            if (request.body.name != 'age') {
+                return "SELECT id_user, firstname, lastname, "+ request.body.name + " FROM User WHERE " + request.body.name + " LIKE '%" + request.body.input + "%' AND id_user <> " + request.session.user.id_user;
+            } else {
+                function sign_to_symbol (sign) {
+                    if (sign == "lt") return "<";
+                    else if (sign == "eq") return "=";
+                    else return ">";
+                }
+                return "SELECT id_user, firstname, lastname, birthdate, age(birthdate) FROM User WHERE age(birthdate) " + sign_to_symbol(request.body.sign) + " " + request.body.year + " AND id_user <> " + request.session.user.id_user;
+            }            
+        }
+    }
+    if (request.body.year) {
+        database.query(await get_query(request), async function (err, results) {
+            if (err) throw err;
+            results.map((elt) => {elt.year = age(elt.birthdate)});
+            response.send({
+                id_user: request.session.user.id_user,
+                query_category: request.body.category,
+                query_name: request.body.name,
+                query_sign: request.body.sign,
+                query_year: request.body.year,
+                search_results: await results
+            })
+        })
+    } else {
+        database.query(await get_query(request), async function (err, results) {
+            if (err) throw err;
+            response.send({
+                id_user: request.session.user.id_user,
+                query_category: request.body.category,
+                query_name: request.body.name,
+                query_input: request.body.input,
+                search_results: await results
+            })
+        })
+    }
 });
 
 server.get('/about', function (request, response) {

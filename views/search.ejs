@@ -1,46 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recherche</title>
+    <link rel="stylesheet" type="text/css" href="../header.css" />
+    <link rel="stylesheet" type="text/css" href="../footer.css" />
+    <link rel="stylesheet" type="text/css" href="../search.css" />
 </head>
-<body>
-<%- include('header'); -%>
-<form id='search' method="GET">
-    <div>
-        <select id="search-category-select">
-            <option value="interest">Centre d'intérêt</option>
-            <option value="name">Nom</option>
-            <option value="country">Pays</option>
-        </select>
-        <input type="search-input" name="" id="<%= id %>" pattern="\w+" placeholder="Chercher...">
-        <button id="search-button">Rechercher</button>
-    </div>
-</form>
-<div id="#results" >
-     <% if (search_results) search_results.forEach(function(res) { %>
-    <a href="/profile/<%= res.id_user %>">
-        Utilisateur <%= res.id_user %> : <%= res.name %> (<%= res.degree %>)
-    </a>
-    <% }); %>
-</div>
-<script src="/jquery-3.3.1.min.js"></script>
-<script>
-    $('#search').ready(function () {
-        $('#search-input').change(function (event) {
-            $.get('/search', {iduser: $(this).attr('id'), query: $(this).val()})
-        });
-        $('#search-button').click(function (event) {
-            $.get('/search', {iduser: $('search-input').attr('id'), query: $('search-input').val()});
-        });
-    });
-</script>
-    <!-- 
-Clic sur le bouton rechercher : affiche page de resultats uri /search?q=yyyy
-en cours de saisie : afficher liste de n suggestion (liens cliquables) /suggest?q=yyyy
 
- -->
- <%- include('footer'); -%>
+<body>
+    <%- include('header', {id_user: id_user}); -%>
+    <h1>Recherche de profils</h1>
+    <form id='search' method="GET">
+        <select id="search-category-select" required>
+            <option value="" selected>-- Choisir --</option>
+            <option value="interest">Centre d'intérêt</option>
+            <option value="person">Personne</option>
+        </select>
+
+        <select id="search-name-select" required>
+            <option value="" selected>-- Choisir --</option>
+        </select>
+
+        <input type="search-input" name="" id="search-input" pattern="\w+" placeholder="Je recherche...">
+        
+        <button id="search-button">Rechercher</button>
+    </form>
+    <div id="results">
+    </div>
+    <script src="/jquery-3.3.1.min.js"></script>
+    <script>
+
+        $("#search-category-select").change(function (e) {
+            const cat_val = $("#search-category-select").val();
+            $.getJSON("/search?category=" + cat_val, async function (data) {
+                $("#search-category-select").attr('value', cat_val);
+                for (let i = 0; i < data.categories.length; i++) {
+                    $("#search-name-select").append($("<option />")
+                        .attr('value', data.categories[i].category)
+                        .attr('class', 'search-name')
+                        .text(data.categories[i].category))
+                }
+            });
+        });
+        $("#search-name-select").change(function (e) {
+            const form = document.getElementById("search");
+            if ($("#search-name-select").val() == 'age') {
+                const sign_select = document.createElement("select");
+                const input = document.getElementById("search-input");
+                form.insertBefore(sign_select, input);
+                sign_select.id = "search-sign-select";
+                sign_select.required = true;
+
+                // Ajout des options < = >
+                const lt = document.createElement("option");
+                lt.value = "lt";
+                lt.text = '<';
+                sign_select.appendChild(lt);
+                const eq = document.createElement("option");
+                eq.value = "eq";
+                eq.text = '=';
+                sign_select.appendChild(eq);
+                const gt = document.createElement("option");
+                gt.value = "gt";
+                gt.text = '>';
+                sign_select.appendChild(gt);
+            } else {
+                const sign_select = document.getElementById("search-sign-select");
+                if (sign_select) {
+                    while (sign_select.childElementCount > 0) {
+                        sign_select.removeChild(sign_select.lastChild);
+                    }
+                }
+                form.removeChild(sign_select);
+            }
+        });
+
+        $("#search").submit(function (event) {
+            event.preventDefault();
+            let posting = "";
+            if ($("#search-name-select").val() == 'age') {
+                posting = $.post('/search', {
+                    category: $('#search-category-select').val(),
+                    name: $('#search-name-select').val(),
+                    sign: $("#search-sign-select").val(),
+                    year: $('#search-input').val()
+                });
+
+            }
+            else {
+                posting = $.post('/search', {
+                    category: $('#search-category-select').val(),
+                    name: $('#search-name-select').val(),
+                    input: $('#search-input').val()
+                });
+            }
+            posting.done(function (data) {
+                
+                $('#search-category-select').attr('value', data.query_category)
+                $('#search-name-select').attr('value', data.query_name)
+                $('#search-input').attr('value', data.query_input)
+                if($("#search-sign-select")) {
+                    $("#search-sign-select").attr('value', data.query_sign);
+                }
+
+                let results_div = document.getElementById('results');
+                while (results_div.childNodes.length > 0) {
+                    results_div.removeChild(results_div.lastChild);
+                }
+                if (data.search_results.length > 0) {
+                    const res_title = document.createElement('ul');
+                    res_title.innerText += "Résultats de recherche : " + data.search_results.length + " résultat(s)";
+                    res_title.setAttribute("id", "results-title");
+                    results_div.appendChild(res_title);
+
+                    if (data.query_category == "interest") {
+                        for (let res of data.search_results) {
+                            let result = document.createElement('li');
+                            results_div.appendChild(result);
+                            let link = document.createElement("a");
+                            link.setAttribute("href", "/profile/" + res.id_user);
+                            link.innerHTML = "(Profil) "
+                            result.appendChild(link);
+                            result.innerHTML += res.firstname + " " + res.lastname + " : " 
+                            result.innerHTML += res.name + " (" + res.category + ")";
+                        }
+                    } else { // catégorie personne                        
+                        for (let res of data.search_results) {
+                            let result = document.createElement('li');
+                            results_div.appendChild(result);
+
+                            let link = document.createElement('a');
+                            link.setAttribute("href", "/profile/" + res.id_user);
+                            link.innerText += "(Profil) ";
+                            result.appendChild(link);
+                            result.innerHTML += res.firstname + " " + res.lastname + " : " + data.query_name + " ";
+                            if (res.year) result.innerHTML += res.year + " ans"
+                            else result.innerHTML += res[data.query_name]
+                        }
+                    }
+                } else {
+                    const noresult = document.createElement('p');
+                    noresult.innerText = `Aucun résultat de recherche parmi les autres utilisateurs de ce site. Réessayez avec autre chose.`;
+                    results_div.appendChild(noresult);
+                }
+            });
+        }
+    );
+    </script>
+    <%- include('footer'); -%>
 </body>
+
 </html>

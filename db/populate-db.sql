@@ -1,6 +1,7 @@
 -- Remplissage de la base de données --
 
 -- Donnees factices crées manuellement
+-- Fonction stockée pour le calcul de l'age
 
 -- Table Users -- 
 -- Table Interest -- 
@@ -30,3 +31,7 @@ INSERT INTO Appreciate(id_user, id_interest, degree) VALUES
 
 INSERT INTO Matching(id_user1, id_user2) VALUES
 (3, 4);
+
+CREATE FUNCTION age (birth DATE)
+RETURNS INT
+RETURN DATEDIFF(CURDATE(), birth) DIV 365;

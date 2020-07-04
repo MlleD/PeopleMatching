@@ -1,0 +1,19 @@
+h1 {
+    display: inherit;
+    justify-content: center;
+}
+
+form {
+    display: flex;
+    height: inherit;
+    width: max-content;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+#results {
+    display: inherit;
+    flex-direction: inherit;
+    align-items: center;
+}
