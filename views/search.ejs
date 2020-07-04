@@ -35,8 +35,10 @@
 
         $("#search-category-select").change(function (e) {
             const cat_val = $("#search-category-select").val();
+            if (!cat_val) return;
             $.getJSON("/search?category=" + cat_val, async function (data) {
                 $("#search-category-select").attr('value', cat_val);
+                $(".search-name").remove();
                 for (let i = 0; i < data.categories.length; i++) {
                     $("#search-name-select").append($("<option />")
                         .attr('value', data.categories[i].category)
