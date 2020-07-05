@@ -2,3 +2,32 @@
     display: block;
     text-align: center;
 }
+
+#add-ci-button {
+    background-color: limegreen;
+    border-radius: 8px;
+}
+
+
+#cancel-ci-button {
+    background-color: orange;
+    border-radius: 8px;
+}
+
+#del-ci-button {
+    background-color: #ff4433;
+    border-radius: 8px;
+}
+#ci-list-ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ci {
+    margin: 5px 5px 5px 5px;
+}
+
+label.ci {
+    font-weight: bold;
+}

@@ -11,20 +11,124 @@
     <%- include('header'); -%>
     <div id="infos-div">
         <h1><%= firstname %> <%= lastname %></h1>
-        <h2><%= country %>, <%= age %> ans
-        </h2>
-        <%if (interests.length > 0) { %>
-        Mes gouts :
-        <ul> 
+        <h2><%= country %>, <%= age %> ans</h2>
+
+        <h3 id="ci-title">Mes gouts  </h3>
+        <% if (same_id) { %>
+        <button class="ci-button" id="add-ci-button">+ Ajouter</button>
+        <button class="ci-button" id="cancel-ci-button">- Annuler</button>
+        <% } %>
+        <ul id="ci-list-ul"> 
+            <%if (interests.length > 0) { %>
             <% interests.forEach(function(interest) { %>
-            <li> <%= interest.name %> : 
+            <li class="ci-item-li" same_id="<%= same_id %>"> <%= interest.name %> : 
                 <%= interest.degree %>/5 </li>
             <% }); %>
         </ul>
         <% } else {%>
-        <p>Je n'ai pas de centre d'intérêt.</p>
+        <p id="no-ci-p" same_id="<%= same_id %>">Je n'ai pas de centre d'intérêt.</p>
         <% } %>
     </div>
     <%- include('footer'); -%>
 </body>
 </html>
+
+<script src="/jquery-3.3.1.min.js"></script>
+<script>
+    /* Le principe est d'écrire dans des inputs type text
+    puis de transférer le contenu de ces inputs 
+    dans la liste de goûts, visuellement et dans la BDD.*/
+
+    $('#add-ci-button').on('click', function (e) {
+        if (document.getElementsByClassName("ci").length == 3) return;
+
+        let ul = document.getElementById("ci-list-ul");
+
+        let ci_label = document.createElement("label");
+        ci_label.innerText = "Validez les deux champs ci-dessous avec la touche ENTREE";
+        ci_label.className = "ci";
+        ul.appendChild(ci_label);
+
+        let ci_input = document.createElement("input");
+        ci_input.placeholder = "Une autre de mes passions...";
+        ci_input.required = "true";
+        ci_input.className = "ci";
+        ci_input.id = "ci-input";
+        ul.appendChild(ci_input);
+
+        let ci_degree_input = document.createElement("input");
+        ci_degree_input.placeholder = "Degré de 0 à 5 /5";
+        ci_degree_input.required = "true";
+        ci_degree_input.className = "ci";
+        ci_degree_input.id = "ci-degree-input";
+        ul.appendChild(ci_degree_input);
+
+        function handler(e) {
+            if (e.key.toLowerCase() != "enter") return;
+            if (!ci_degree_input.value || !ci_input.value) return;
+            let integer = parseInt(ci_degree_input.value, 10);
+            if (!integer || integer < 0 || integer > 5) return;
+
+            $.post("/profile/add_ci", {
+                name: ci_input.value,
+                degree: ci_degree_input.value
+            }).done(function (data) {
+                console.log(data);
+                let futur_ci = document.createElement("li");
+                futur_ci.setAttribute("class", "ci-item-li");
+                futur_ci.innerText = ci_input.value + " : " + ci_degree_input.value + "/5";
+                ci_label.remove();
+                ci_input.remove();
+                ci_degree_input.remove();
+                ul.appendChild(futur_ci);
+            })
+        };
+        $('#ci-input').on('keypress', handler);
+        $('#ci-degree-input').on('keypress', handler);
+        /* ci_degree_input.onkeypress = handler(e);
+        ci_input.onkeypress = handler(e); */
+    });
+
+    // Le bouton annule conditionnellement la suppression et l'ajout
+    $('#cancel-ci-button').on("click", function (e) {
+        let item_list = document.getElementsByClassName("ci");
+        if (!item_list) return;
+        for (let i = item_list.length - 1; i >= 0; i--) {
+            item_list[i].remove();
+        }
+
+        let delete_button = document.getElementById("del-ci-button");
+        if (!delete_button) return;
+        delete_button.remove();
+    });
+
+
+    $('.ci-item-li').on("mouseover", function (e) {
+        // On cherche à repondre à cette question : 
+        // est-ce que l'utilisateur qui voit la page de profil est-il
+        // le même que celui qui a sa session ouverte et sur ce profil ?
+        if (e.target.getAttribute("same_id") == "false") return;
+
+        // S'il y a déjà le bouton "Supprimer"
+        if (document.getElementById("del-ci-button")) return;
+        
+        // Si on est en mode ajout de centre d'intérêt
+        if($('.ci').get(0)) return;
+
+        const delete_button = document.createElement("button");
+        e.target.after(delete_button);
+
+        delete_button.innerHTML = "Supprimer"
+        delete_button.id = "del-ci-button";
+        delete_button.className = "ci-button";
+        delete_button.onclick = function (e) {
+            $.post("/profile/remove_ci", {
+                deleted_ci: delete_button.previousElementSibling.innerHTML.split(':')[0].trim()
+            }).done(function (data) {
+                console.log(data);
+                delete_button.previousElementSibling.remove();
+                delete_button.remove();
+            });
+        };
+    });
+</script>

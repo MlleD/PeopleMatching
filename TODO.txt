@@ -95,3 +95,11 @@ d'intérêt
     et la sous-catégorie (pays, age, etc.) matchés ainsi
     que la valeur matchée : exemple "age 25 ans"
 - - Centrer les items du formulaire de recherche de profils et le titre de la page
+
+05/07/2020 : 
+[Profil] Gestion des centres d'intérêt (BDD et vue): 
+- Suppression via hover sur un centre d'intérêt
+- Ajout d'un centre d'intérêt via un hover sur le titre "Mes goûts"
+- Possibilité d'annuler une suppression ou un ajout en cours
+- Sécurité : on évite qu'un utilisateur puisse éditer le profil d'un autre utilisateur
+en comparant l'id de l'utilisateur regardant la page avec l'id enregistré dans la session
