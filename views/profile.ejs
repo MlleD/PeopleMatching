@@ -23,7 +23,7 @@
             </button>
         <% } %>
 
-        <h3 id="ci-title">Mes gouts  </h3>
+        <h3 id="ci-title" same_id="<%= same_id %>">Mes gouts  </h3>
 
         <ul id="ci-list-ul"> 
             <%if (interests.length > 0) { %>
@@ -149,6 +149,7 @@
     });
 
     $('#ci-title').on("click", function (e) {
+        if ($('#ci-title').attr("same_id") == "false") return;
         const add_btn = document.getElementById("add-ci-button");
         const cancel_btn = document.getElementById("cancel-ci-button");
         if (add_btn) {
