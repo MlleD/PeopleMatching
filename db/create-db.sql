@@ -52,6 +52,6 @@ CREATE TABLE IF NOT EXISTS Matching
     CONSTRAINT FK_Matching_Id_User1 FOREIGN KEY (id_user1) REFERENCES User(id_user),
     CONSTRAINT FK_Matching_Id_User2 FOREIGN KEY (id_user2) REFERENCES User(id_user),
     CONSTRAINT U_Matching UNIQUE (id_user1, id_user2),
-    CHECK (id_user1 < id_user2)
+    CHECK (id_user1 != id_user2)
 );
 

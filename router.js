@@ -104,18 +104,23 @@ server.get('/profile/:iduser', function (request, response) {
                 ` AND Appreciate.id_interest = Interest.id_interest`;
             database.query(query, function (err, resInterests) {
                 if (err) throw err;
-                response.render('profile.ejs', {
-                    id_user: request.session.user.id_user,
-                    same_id: request.session.user.id_user == request.params.iduser,
-                    firstname: resName[0].firstname,
-                    lastname: resName[0].lastname,
-                    country: resName[0].country,
-                    age: age(resName[0].birthdate),
-                    sex: resName[0].sex,
-                    interests: resInterests,
-                    search_results: []
-                }
-                );
+                query = "SELECT id_user2 FROM Matching WHERE id_user1 = " + request.session.user.id_user  + " AND id_user2 = " + request.params.iduser;
+                database.query(query, function (err, resLikes) {
+                    if (err) throw err;
+                    
+                    response.render('profile.ejs', {
+                        id_user: request.session.user.id_user,
+                        same_id: request.session.user.id_user == request.params.iduser,
+                        liked: resLikes.length != 0,
+                        firstname: resName[0].firstname,
+                        lastname: resName[0].lastname,
+                        country: resName[0].country,
+                        age: age(resName[0].birthdate),
+                        sex: resName[0].sex,
+                        interests: resInterests,
+                        search_results: []
+                    });
+                })
             })
         }
     });
@@ -182,6 +187,25 @@ server.post('/profile/remove_ci', function (request, response) {
                 response.status(200).send("La suppression de ce centre d'intérêt (id : " + resF.insertId + ") est enregistrée.");
             }
         })
+    })
+});
+
+server.get("/profile/likestatus/:otherid/:oldval", function (request, response) {
+    function get_query(request) {
+        if (request.params.oldval == "true") {
+            return "DELETE FROM Matching WHERE id_user1 = " + request.session.user.id_user + " AND id_user2 = " + request.params.otherid;
+        } else {
+            return "INSERT INTO Matching (id_user1, id_user2) VALUES (" + request.session.user.id_user + ", " + request.params.otherid + ")";
+        }
+    }
+    database.query(get_query(request), function (err, res) {
+        if (err) {
+            if (err.code == "'ER_DUP_ENTRY")
+                response.send({liked: request.params.oldval})
+        } else {
+            const newval = request.params.oldval == "true" ? "false" : "true";
+            response.send({liked: newval})
+        }
     })
 });
 

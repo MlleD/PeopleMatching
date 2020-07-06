@@ -13,6 +13,16 @@
         <h1><%= firstname %> <%= lastname %></h1>
         <h2><%= country %>, <%= age %> ans</h2>
 
+        <% if (!same_id) { %>
+            <button id="like-button" liked="<%= liked %>">
+                <% if (liked) { %>
+                    Aimé
+                <% } else { %>
+                    J'aime
+                <% } %>
+            </button>
+        <% } %>
+
         <h3 id="ci-title">Mes gouts  </h3>
         <% if (same_id) { %>
         <button class="ci-button" id="add-ci-button">+ Ajouter</button>
@@ -130,5 +140,17 @@
                 delete_button.remove();
             });
         };
+    });
+
+    $('#like-button').on("click", function (e) {
+        const url_splitted = document.URL.split('/');
+        const oid = url_splitted[url_splitted.length - 1];
+        const query_string = oid + "/" + e.target.getAttribute("liked")
+        
+        $.getJSON("/profile/likestatus/" + query_string, function (data) {
+            const newval = data.liked == "true" ? "Aimé" : "J'aime";
+            $("#like-button").html(newval);
+            $("#like-button").attr("liked", data.liked);
+        })
     });
 </script>

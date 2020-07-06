@@ -103,3 +103,8 @@ d'intérêt
 - Possibilité d'annuler une suppression ou un ajout en cours
 - Sécurité : on évite qu'un utilisateur puisse éditer le profil d'un autre utilisateur
 en comparant l'id de l'utilisateur regardant la page avec l'id enregistré dans la session
+
+06/07/2020
+[LIKE] Système de likes :
+On peut liker un autre utilisateur du site via un bouton LIKE sur sa page de profil.
+La BDD se met à jour à chaque changement de valeur du bouton LIKE.
