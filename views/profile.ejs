@@ -24,10 +24,7 @@
         <% } %>
 
         <h3 id="ci-title">Mes gouts  </h3>
-        <% if (same_id) { %>
-        <button class="ci-button" id="add-ci-button">+ Ajouter</button>
-        <button class="ci-button" id="cancel-ci-button">- Annuler</button>
-        <% } %>
+
         <ul id="ci-list-ul"> 
             <%if (interests.length > 0) { %>
             <% interests.forEach(function(interest) { %>
@@ -49,7 +46,7 @@
     puis de transférer le contenu de ces inputs 
     dans la liste de goûts, visuellement et dans la BDD.*/
 
-    $('#add-ci-button').on('click', function (e) {
+    function handle_add_button_click (e) {
         if (document.getElementsByClassName("ci").length == 3) return;
 
         let ul = document.getElementById("ci-list-ul");
@@ -95,12 +92,10 @@
         };
         $('#ci-input').on('keypress', handler);
         $('#ci-degree-input').on('keypress', handler);
-        /* ci_degree_input.onkeypress = handler(e);
-        ci_input.onkeypress = handler(e); */
-    });
+    };
 
     // Le bouton annule conditionnellement la suppression et l'ajout
-    $('#cancel-ci-button').on("click", function (e) {
+    function handle_cancel_button_click(e) {
         let item_list = document.getElementsByClassName("ci");
         if (!item_list) return;
         for (let i = item_list.length - 1; i >= 0; i--) {
@@ -110,7 +105,7 @@
         let delete_button = document.getElementById("del-ci-button");
         if (!delete_button) return;
         delete_button.remove();
-    });
+    };
 
 
     $('.ci-item-li').on("mouseover", function (e) {
@@ -130,7 +125,6 @@
 
         delete_button.innerHTML = "Supprimer"
         delete_button.id = "del-ci-button";
-        delete_button.className = "ci-button";
         delete_button.onclick = function (e) {
             $.post("/profile/remove_ci", {
                 deleted_ci: delete_button.previousElementSibling.innerHTML.split(':')[0].trim()
@@ -152,5 +146,29 @@
             $("#like-button").html(newval);
             $("#like-button").attr("liked", data.liked);
         })
+    });
+
+    $('#ci-title').on("click", function (e) {
+        const add_btn = document.getElementById("add-ci-button");
+        const cancel_btn = document.getElementById("cancel-ci-button");
+        if (add_btn) {
+            add_btn.remove();
+            cancel_btn.remove();
+        } else {
+            const add_btn = document.createElement("button");
+            add_btn.className = "ci-button";
+            add_btn.id = "add-ci-button";  
+            add_btn.innerText = "+ Ajouter";
+            add_btn.onclick = handle_add_button_click;
+            const prev = document.getElementById("ci-title");
+            prev.after(add_btn);
+
+            const cancel_btn = document.createElement("button");
+            cancel_btn.className = "ci-button";
+            cancel_btn.id = "cancel-ci-button";
+            cancel_btn.innerText = "- Annuler";
+            cancel_btn.onclick = handle_cancel_button_click;
+            add_btn.after(cancel_btn);
+        }
     });
 </script>

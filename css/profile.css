@@ -3,6 +3,11 @@
     text-align: center;
 }
 
+#ci-title:hover {
+    cursor: pointer;
+    text-decoration: underline dotted 3px;
+}
+
 #add-ci-button {
     background-color: limegreen;
     border-radius: 8px;

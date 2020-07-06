@@ -108,3 +108,7 @@ en comparant l'id de l'utilisateur regardant la page avec l'id enregistré dans 
 [LIKE] Système de likes :
 On peut liker un autre utilisateur du site via un bouton LIKE sur sa page de profil.
 La BDD se met à jour à chaque changement de valeur du bouton LIKE.
+[Profil] UI : 
+Les boutons de modification de la liste des goûts (ajout et annulation) sont 
+maintenant cachés; Pour qu'ils apparaissent / disparaissent, il faut cliquer
+sur le titre "Mes goûts".
