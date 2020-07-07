@@ -319,9 +319,13 @@ server.get('/logout', function (request, response) {
     response.render('home.ejs', { id_user: null });
 });
 
-server.get('message/:id_user', function (request, response) {
+server.get('/message/:id_user', function (request, response) {
     response.render('message.ejs', { id_user: request.session.user.id_user })
-})
+});
+
+server.get('/account/:id_user', function (request, response) {
+    response.render('account.ejs', { id_user: request.session.user.id_user })
+});
 
 server.use(function (request, response) {
     response.send('On another page.');

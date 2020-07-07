@@ -127,3 +127,6 @@ section (par exemple le titre "Ma description" ou
 [Profil] UI
 - Ajout d'un lien "Modifier" en haut de la page. Il déclenche l'apparition
 des boutons permettant de modifier la description et les centres d'intérêt
+
+[Compte] Ajout d'une page contenant seulement le titre "Mon compte"
+[Messagerie] Ajout d'une page contenant seulement le titre "Messagerie"
