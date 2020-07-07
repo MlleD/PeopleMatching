@@ -91,6 +91,7 @@ server.post('/login', function (request, response) {
 server.get('/profile/:iduser', function (request, response) {
     if (!request.session.user) {
         response.status(404).send("Vous devez être connecté pour voir le contenu de cette page.")
+        return;
     }
     let query = `SELECT firstname, lastname, country, birthdate, sex, description FROM User WHERE id_user = ` + request.params.iduser;
     database.query(query, function (err, resName) {
@@ -135,6 +136,10 @@ server.get('/profile/:iduser', function (request, response) {
 
 
 server.get('/profile/:iduser/change', function (request, response) {
+    if (!request.session.user) {
+        response.sendStatus(404);
+        return;
+    }
     let query = `SELECT * FROM User WHERE user.id_user = ?
     ; SELECT name, degree FROM Appreciate a 
     JOIN Interest i ON a.id_interest = i.id_interest
@@ -198,6 +203,10 @@ server.post('/profile/remove_ci', function (request, response) {
 });
 
 server.get("/profile/likestatus/:otherid/:oldval", function (request, response) {
+    if(!request.session.user) {
+        response.sendStatus(404);
+        return;
+    }
     function get_query(request) {
         if (request.params.oldval == "true") {
             return "DELETE FROM Matching WHERE id_user1 = " + request.session.user.id_user + " AND id_user2 = " + request.params.otherid;
@@ -235,6 +244,14 @@ server.post("/image/add", function (request, response) {
 });
 
 server.get('/search', async function (request, response) {
+    if (!request.query) {
+        response.sendStatus(404);
+        return;
+    }
+    if (!request.session.user) {
+        response.sendStatus(404);
+        return;
+    }
     async function get_query(req) {
         if (req.query.category == 'person') {
             return "SELECT Column_name as category FROM INFORMATION_SCHEMA.COLUMNS where table_name = 'User' AND Column_name not in ('id_user', 'password')"

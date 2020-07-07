@@ -138,3 +138,7 @@ horizontale de photos puis verticale (haut vers bas) : par ex. 4 photos
 - En BDD les photos sont stockées dans une table à part. La table contient l'id_photo,
 l'id_user, le nom de la photo et le lien vers la photo ainsi que sa date d'ajout.
 - Un bouton pour ajouter une photo
+
+[Routeur] Envoi d'une erreur 404 ("Not found") pour sécuriser des requêtes Get 
+et éviter qu'un utilisateur non connecté y accède. exemple de pages : recherche,
+profil, etc.
