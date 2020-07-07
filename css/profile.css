@@ -3,11 +3,6 @@
     text-align: center;
 }
 
-#ci-title:hover {
-    cursor: pointer;
-    text-decoration: underline dotted 3px;
-}
-
 #add-ci-button {
     background-color: limegreen;
     border-radius: 8px;
@@ -39,4 +34,9 @@ label.ci {
 
 #like-button {
     color: #007FFF;
+}
+
+#modify-descr-button {
+    background-color: skyblue;
+    border-radius: 8px;
 }

@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS User
     birthdate DATE NOT NULL,
     country VARCHAR(255) NOT NULL,
     sex VARCHAR(10) NOT NULL,
+    description VARCHAR(1000),
 
     CONSTRAINT PK_User PRIMARY KEY (id_user),
     -- pas nom/prénom pour prendre en compte les homonymes

@@ -92,7 +92,7 @@ server.get('/profile/:iduser', function (request, response) {
     if (!request.session.user) {
         response.status(404).send("Vous devez être connecté pour voir le contenu de cette page.")
     }
-    let query = `SELECT firstname, lastname, country, birthdate, sex FROM User WHERE id_user = ` + request.params.iduser;
+    let query = `SELECT firstname, lastname, country, birthdate, sex, description FROM User WHERE id_user = ` + request.params.iduser;
     database.query(query, function (err, resName) {
         if (err) throw err;
         if (!resName.length) {
@@ -117,6 +117,7 @@ server.get('/profile/:iduser', function (request, response) {
                         country: resName[0].country,
                         age: age(resName[0].birthdate),
                         sex: resName[0].sex,
+                        description: resName[0].description,
                         interests: resInterests,
                         search_results: []
                     });
@@ -206,6 +207,15 @@ server.get("/profile/likestatus/:otherid/:oldval", function (request, response) 
             const newval = request.params.oldval == "true" ? "false" : "true";
             response.send({liked: newval})
         }
+    })
+});
+
+server.post("/description/modify", function (request, response) {
+    const query = "UPDATE User SET description = '" + request.body.description + "' WHERE id_user = " + request.session.user.id_user;
+    database.query(query, function (err, res) {
+        if (err) throw err;
+        console.log(res);
+        response.sendStatus(200)
     })
 });
 

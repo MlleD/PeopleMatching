@@ -22,8 +22,15 @@
                 <% } %>
             </button>
         <% } %>
+        <h3 class="title description" id="descr-title" same_id="<%= same_id %>">Ma description</h3>
+        <% if (description) { %>
+            <p id="descr-text" can_edit="false"><%= description %></p>
+        <!--<textarea class="description" id="descr-text" rows="10" columns="50" maxlength="1000" same_id="<%= same_id %>"><%= description %></textarea>-->
+        <% } else { %>
+        <p id="descr-text" can_edit="false">Pas de description.</p>
+        <% } %>
 
-        <h3 id="ci-title" same_id="<%= same_id %>">Mes gouts  </h3>
+        <h3 class="title ci" id="ci-title" same_id="<%= same_id %>">Mes gouts  </h3>
 
         <ul id="ci-list-ul"> 
             <%if (interests.length > 0) { %>
@@ -172,4 +179,65 @@
             add_btn.after(cancel_btn);
         }
     });
+
+    function handle_modify_descr(e) {
+            
+        if (e.target.innerText == "Modifier") {
+            e.target.innerText = "Valider";
+            e.target.style.backgroundColor = "springgreen";
+            const paragraph = document.getElementById("descr-text");
+            const textarea = document.createElement("textarea");
+            textarea.innerText = paragraph.innerText;
+            textarea.id = "descr-area";
+            e.target.after(textarea);
+            paragraph.remove();
+        } else if (e.target.innerText == "Valider") {
+            const textarea = document.getElementById("descr-area");
+            const paragraph = document.createElement("p");
+            paragraph.id = "descr-text";
+            paragraph.textContent = textarea.value;
+            const descr_title = document.getElementById("descr-title");
+            descr_title.after(paragraph);
+            textarea.remove();
+            e.target.remove();
+            $.post("/description/modify", {
+                description: paragraph.textContent
+            }).done(function (data) {
+                console.log("post OK. Data = ");                
+                console.log(data);
+                
+            })
+        }
+    }
+
+    $("#descr-title").on("click", function (e) {
+        let modify_descr_button = document.getElementById("modify-descr-button");
+        if (!modify_descr_button) {
+            modify_descr_button = document.createElement("button");
+            modify_descr_button.id = "modify-descr-button";
+            modify_descr_button.innerText = "Modifier";
+            modify_descr_button.onclick = handle_modify_descr;
+            let descr_title = document.getElementById("descr-title");
+            descr_title.after(modify_descr_button); 
+        } else {
+            modify_descr_button.remove();
+        }
+    });
+
+    $('.title').on("mouseover", function (e) {
+        if(e.target.getAttribute("same_id") == "true") {
+            e.target.style.cursor = "pointer";
+            e.target.style.textDecoration = "underline dotted 3px";
+        } else {
+            e.target.style.cursor = "default";
+            e.target.style.textDecoration = "none";
+        }
+    });
+
+    $('.title').on("mouseleave", function (e) {
+        e.target.style.cursor = "default";
+        e.target.style.textDecoration = "none";
+    });
+
+    
 </script>

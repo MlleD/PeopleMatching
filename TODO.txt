@@ -112,3 +112,15 @@ La BDD se met à jour à chaque changement de valeur du bouton LIKE.
 Les boutons de modification de la liste des goûts (ajout et annulation) sont 
 maintenant cachés; Pour qu'ils apparaissent / disparaissent, il faut cliquer
 sur le titre "Mes goûts".
+
+07/07/2020
+[Profil] Description
+- Ajout de la description dans la BDD et le profil
+- Pas obligatoire (on peut ne pas écrire de description)
+- Maximum de 1 000 caractères autorisés
+- Modification possible pour le propriétaire du profil
+- Amélioration du déclenchement d'apparition/disparition
+de boutons modificateurs (ajouter, supprimer, modifier) : 
+le déclenchement se fait par "mouseover" du titre de la
+section (par exemple le titre "Ma description" ou
+"Mes gouts")
