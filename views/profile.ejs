@@ -9,6 +9,9 @@
 </head>
 <body>
     <%- include('header'); -%>
+    <% if (same_id) { %>}
+    <a href="" id="modify-profile">Modifier le profil</a>
+    <% } %>
     <div id="infos-div">
         <h1><%= firstname %> <%= lastname %></h1>
         <h2><%= country %>, <%= age %> ans</h2>
@@ -235,5 +238,7 @@
         e.target.style.textDecoration = "none";
     });
 
-    
+    $('#modify-profile').on("click", function (e) {
+        $(".title").click()
+    });
 </script>

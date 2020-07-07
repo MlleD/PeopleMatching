@@ -124,3 +124,6 @@ de boutons modificateurs (ajouter, supprimer, modifier) :
 le déclenchement se fait par "mouseover" du titre de la
 section (par exemple le titre "Ma description" ou
 "Mes gouts")
+[Profil] UI
+- Ajout d'un lien "Modifier" en haut de la page. Il déclenche l'apparition
+des boutons permettant de modifier la description et les centres d'intérêt

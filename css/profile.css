@@ -40,3 +40,7 @@ label.ci {
     background-color: skyblue;
     border-radius: 8px;
 }
+
+#modify-profile {
+    text-align: center;
+}
