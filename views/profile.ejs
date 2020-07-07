@@ -202,10 +202,6 @@
             e.target.remove();
             $.post("/description/modify", {
                 description: paragraph.textContent
-            }).done(function (data) {
-                console.log("post OK. Data = ");                
-                console.log(data);
-                
             })
         }
     }

@@ -214,7 +214,6 @@ server.post("/description/modify", function (request, response) {
     const query = "UPDATE User SET description = '" + request.body.description + "' WHERE id_user = " + request.session.user.id_user;
     database.query(query, function (err, res) {
         if (err) throw err;
-        console.log(res);
         response.sendStatus(200)
     })
 });
