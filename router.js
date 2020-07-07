@@ -107,20 +107,26 @@ server.get('/profile/:iduser', function (request, response) {
                 query = "SELECT id_user2 FROM Matching WHERE id_user1 = " + request.session.user.id_user  + " AND id_user2 = " + request.params.iduser;
                 database.query(query, function (err, resLikes) {
                     if (err) throw err;
-                    
-                    response.render('profile.ejs', {
-                        id_user: request.session.user.id_user,
-                        same_id: request.session.user.id_user == request.params.iduser,
-                        liked: resLikes.length != 0,
-                        firstname: resName[0].firstname,
-                        lastname: resName[0].lastname,
-                        country: resName[0].country,
-                        age: age(resName[0].birthdate),
-                        sex: resName[0].sex,
-                        description: resName[0].description,
-                        interests: resInterests,
-                        search_results: []
-                    });
+                    query = "SELECT link, name FROM Photo WHERE id_user = " 
+                    + request.session.user.id_user;
+                    database.query(query, function (err, resPhotos) {
+                        if (err) throw err;
+                        
+                        response.render('profile.ejs', {
+                            id_user: request.session.user.id_user,
+                            same_id: request.session.user.id_user == request.params.iduser,
+                            liked: resLikes.length != 0,
+                            firstname: resName[0].firstname,
+                            lastname: resName[0].lastname,
+                            country: resName[0].country,
+                            age: age(resName[0].birthdate),
+                            sex: resName[0].sex,
+                            description: resName[0].description,
+                            interests: resInterests,
+                            photos: resPhotos,
+                            search_results: []
+                        });
+                    })
                 })
             })
         }
@@ -215,6 +221,16 @@ server.post("/description/modify", function (request, response) {
     database.query(query, function (err, res) {
         if (err) throw err;
         response.sendStatus(200)
+    })
+});
+
+server.post("/image/add", function (request, response) {
+    const query = "INSERT INTO Photo (id_user, link, name) VALUES ("
+    + request.session.user.id_user + ", '" + request.body.link + "', '"
+    + request.body.name + "')";
+    database.query(query, function (err, res) {
+        if (err) throw err;
+        response.sendStatus(200);
     })
 });
 

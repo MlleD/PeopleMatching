@@ -45,6 +45,19 @@
         <% } else {%>
         <p id="no-ci-p" same_id="<%= same_id %>">Je n'ai pas de centre d'intérêt.</p>
         <% } %>
+
+        <h3 class="title" id="photo-title" same_id="<%= same_id %>">Mes photos</h3>
+        <div id="photo-div">
+            <% if (same_id && photos.length > 0) {  %>
+            <ul id="photo-list">
+                <% photos.forEach(function(photo) { %>
+                    <img src="<%= photo.link %>" alt="<%= photo.name %>" />
+                    <% }) %>
+            </ul>
+            <% } else { %>
+            <p>Pas de photos.</p>
+            <% } %>
+        </div>
     </div>
     <%- include('footer'); -%>
 </body>
@@ -167,7 +180,7 @@
             cancel_btn.remove();
         } else {
             const add_btn = document.createElement("button");
-            add_btn.className = "ci-button";
+            add_btn.className = "ci-button add-button";
             add_btn.id = "add-ci-button";  
             add_btn.innerText = "+ Ajouter";
             add_btn.onclick = handle_add_button_click;
@@ -223,6 +236,58 @@
         }
     });
 
+    function handle_add_photo_button (e) {
+        let input = document.getElementById("add-img-input");
+        // Il nous faut seulement 1 champ input
+        if (input != null) {
+            input.remove();
+            return;
+        } else {
+            //On crée les balises nécessaires pour ajouter l'image
+            input = document.createElement("input");
+            input.id = "photo-input";
+            input.placeholder = "Lien vers l'image"
+            e.target.after(input);
+            const name = document.createElement("input");
+            name.placeholder = "Nom de l'image";
+            input.after(name);
+            const ok = document.createElement("button");
+            ok.value = "Valider";
+            ok.textContent = "Valider";
+            name.after(ok);
+            ok.onclick = function (e) {
+                const new_img = document.createElement("img");
+                new_img.setAttribute("src", input.value);
+                new_img.className = "photo";
+                new_img.setAttribute("alt", name.value);
+                const list = document.getElementById("photo-list");
+                list.appendChild(new_img);
+                e.target.remove();
+                name.remove();
+                input.remove();
+
+                $.post("/image/add", {
+                    link: new_img.src,
+                    name: new_img.name
+                })
+            }
+        }
+    }
+
+    $('#photo-title').on("click", function(e) {
+        const add_button = document.getElementById("add-photo-button");
+        if (add_button != null) {
+            add_button.remove();
+        } else {
+            const new_add_btn = document.createElement("button");
+            new_add_btn.id = "add-photo-button";
+            new_add_btn.className = "add-button";
+            new_add_btn.innerText = "+ Ajouter";
+            new_add_btn.onclick = handle_add_photo_button;
+            e.target.after(new_add_btn);
+        }
+    });
+
     $('.title').on("mouseover", function (e) {
         if(e.target.getAttribute("same_id") == "true") {
             e.target.style.cursor = "pointer";
@@ -239,6 +304,7 @@
     });
 
     $('#modify-profile').on("click", function (e) {
+        e.preventDefault();
         $(".title").click()
     });
 </script>

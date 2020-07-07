@@ -56,3 +56,15 @@ CREATE TABLE IF NOT EXISTS Matching
     CHECK (id_user1 != id_user2)
 );
 
+-- Photos des utilisateurs --
+CREATE TABLE IF NOT EXISTS Photo
+(
+    id_photo INT AUTO_INCREMENT,
+    id_user INT NOT NULL,
+    date DATETIME DEFAULT NOW(),
+    link VARCHAR(255) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+
+    CONSTRAINT FK_Photo_Id_User FOREIGN KEY (id_user) REFERENCES User(id_user),
+    CONSTRAINT PK_Photo PRIMARY KEY (id_photo)
+);

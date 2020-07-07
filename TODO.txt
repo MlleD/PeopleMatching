@@ -130,3 +130,11 @@ des boutons permettant de modifier la description et les centres d'intérêt
 
 [Compte] Ajout d'une page contenant seulement le titre "Mon compte"
 [Messagerie] Ajout d'une page contenant seulement le titre "Messagerie"
+
+[Profil] Photos
+- En bas de la liste des goûts, il y a une liste de photos : liste 
+horizontale de photos puis verticale (haut vers bas) : par ex. 4 photos
+à chaque ligne puis la 5e se place en bas à gauche et ainsi de suite
+- En BDD les photos sont stockées dans une table à part. La table contient l'id_photo,
+l'id_user, le nom de la photo et le lien vers la photo ainsi que sa date d'ajout.
+- Un bouton pour ajouter une photo
