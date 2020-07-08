@@ -9,6 +9,7 @@
 </head>
 <body>
     <%- include('header', {id_user: id_user}); -%>
+    <h1>Connexion à un compte</h1>
     <form id="login-form" method="post">
         <input type="email" name="email" id="email" pattern=".+@\w+\.\w{2,4}" placeholder="Email" required>
         <input type="password" name="password1" id="password" placeholder="Mot de passe" required>
