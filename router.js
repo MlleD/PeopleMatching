@@ -4,6 +4,9 @@ const database = config.database;
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
+const { request } = require('express');
+const { data } = require('jquery');
+const e = require('express');
 
 // ---- FONCTIONS HELPER ----
 function capitalizeFirstLetter(string) {
@@ -352,9 +355,41 @@ server.get('/logout', function (request, response) {
     response.render('home.ejs', { id_user: null });
 });
 
-server.get('/message/:id_user', function (request, response) {
-    response.render('message.ejs', { id_user: request.session.user.id_user })
+server.get('/message/:id_user', async function (request, response) {
+    /*On affiche le prénom et nom de chaque contact. Pour être contact avec
+    un utilisateur il faut qu'il vous lIKE et que vous le LIKE */
+    const query_contacts = "SELECT id_user, firstname, lastname FROM User WHERE id_user IN (SELECT id_user2 FROM Matching WHERE id_user1 = " + request.session.user.id_user + " AND id_user2 IN (SELECT id_user1 FROM Matching WHERE id_user2 = " + request.session.user.id_user + "))";
+
+    database.query(query_contacts, function (err, res_contacts) {
+        if (err) throw err;
+        response.render('message.ejs', {
+            id_user: request.session.user.id_user,
+            contacts: res_contacts,
+            messages: []
+        })
+    })
 });
+
+//Récupérer toute la discussion avec le contact
+server.get('/discussion/:otherid', function (request, response) {
+    const query = "SELECT id_user_from, id_user_to, date, text FROM Message WHERE (id_user_from = " + request.session.user.id_user + " AND id_user_to = " + request.params.otherid + ") OR (id_user_from = " + request.params.otherid + " AND id_user_to = " + request.session.user.id_user + ")";
+    database.query(query, function (err, res) {
+        if (err) throw err; console.log(res)
+        response.send({
+            msg: res, 
+            id_user:request.session.user.id_user
+        });
+    })
+});
+
+// Ajouter un message
+server.post('/message/add', function (request, response) {
+    const query = "INSERT INTO Message (id_user_from, id_user_to, text) VALUES (" + request.session.user.id_user + ", " + request.body.to + ", '" + request.body.text + "')";
+    database.query(query, function (err, res) {
+        if (err) throw err;
+        response.sendStatus(200);
+    }) 
+})
 
 server.get('/account/:id_user', function (request, response) {
     response.render('account.ejs', { id_user: request.session.user.id_user })

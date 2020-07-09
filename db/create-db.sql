@@ -68,3 +68,17 @@ CREATE TABLE IF NOT EXISTS Photo
     CONSTRAINT FK_Photo_Id_User FOREIGN KEY (id_user) REFERENCES User(id_user),
     CONSTRAINT PK_Photo PRIMARY KEY (id_photo)
 );
+
+-- Messages entre contacts --
+CREATE TABLE IF NOT EXISTS Message
+(
+    id_message INT AUTO_INCREMENT,
+    id_user_from INT NOT NULL,
+    id_user_to INT NOT NULL,
+    date DATETIME DEFAULT NOW(),
+    text VARCHAR(255) NOT NULL,
+
+    CONSTRAINT FK_Message_Id_User_To FOREIGN KEY (id_user_to) REFERENCES User(id_user),
+    CONSTRAINT FK_Message_Id_User_From FOREIGN KEY (id_user_from) REFERENCES User(id_user),
+    CONSTRAINT PK_Message PRIMARY KEY (id_message)
+);

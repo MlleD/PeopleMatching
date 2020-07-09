@@ -1,3 +1,40 @@
 h1 {
     text-align: center;
 }
+
+section#two-sections-container {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+}
+
+section#two-sections-container>section {
+    width: 50%;
+    text-align: center;
+}
+
+#contact-section {
+    background-color: aliceblue;
+}
+
+#conversation-section {
+    background-color: antiquewhite;
+}
+
+.message {
+    list-style-type: none;
+    border-radius: 10px;
+    padding: 0.5em;
+    
+    display: flex;
+    flex-direction: column;
+    max-width: max-content;
+}
+.my_msg {
+    background-color: lightpink;
+    text-align: right;    
+}
+.your_msg {
+    background-color: powderblue;
+    text-align: left;
+}

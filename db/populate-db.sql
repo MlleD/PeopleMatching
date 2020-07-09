@@ -30,8 +30,13 @@ INSERT INTO Appreciate(id_user, id_interest, degree) VALUES
 (4, 5, 4);
 
 INSERT INTO Matching(id_user1, id_user2) VALUES
-(3, 4);
+(3, 4), (4, 3), (1, 5), (1, 2);
 
 CREATE FUNCTION age (birth DATE)
 RETURNS INT
 RETURN DATEDIFF(CURDATE(), birth) DIV 365;
+
+INSERT INTO Message(id_user_from, id_user_to, text) VALUES
+(3, 4, "Bonjour ! Tu vas bien ?"),
+(4, 3, "Bonjour ! Oui je vais bien, et toi ?"),
+(3, 4, "Moi aussi.")

@@ -12,7 +12,99 @@
     <%- include('header', {id_user: id_user}); -%>
     <div class="content">
         <h1>Ma messagerie</h1>
+        <section id="two-sections-container">
+            <section id="contact-section">
+                <h2 class="title" id=contact-title>Mes contacts</h2>
+                <% if (contacts.length > 0) { %>
+                <ul id="contact-list">
+                    <% contacts.forEach(function(contact) { %>
+                        <li class="contact"> <a href="" id_user="<%= contact.id_user%>"><%=contact.firstname %> <%= contact.lastname %></a></li>
+                    <% }) %>
+                </ul>
+                <%} else {%>
+                    <p>Aucun contact.</p>
+                <% } %>
+            </section>
+            <section id="conversation-section">
+                <h2 class="title" id="discussion-title">Conversation</h2>
+            </section>
+        </section>
     </div>
     <%- include('footer'); -%>
 </body>
 </html>
+<script src="/jquery-3.3.1.min.js"></script>
+<script>
+    
+    function handle_click_send_button(e) {
+        // Mettre le contenu du message dans la conversation
+        const input = document.getElementById("message-input");
+        const li = document.createElement("li");
+        li.innerText = "[Moi] " + input.value;
+        li.className += "message my_msg conversation";
+        $('#message-list').append(li);
+        
+        // Enregistrement dans la BDD
+        $.post("/message/add", {
+            to: e.target.getAttribute("id_user"),
+            text: input.value,
+        });
+        
+        // Vider le contenu textuel de l'input
+        input.value = "";
+    }
+
+    $(".contact").on("click", (function (e) {
+        // On supprime les noeuds avec la classe conversation pour éviter
+        // d'afficher plusieurs fois les mêmes messages
+        if ($(".conversation").length > 0) {
+            $(".conversation").remove();
+            return;
+        }
+        
+        // e.target = a href du contact
+        e.preventDefault();
+        
+        let conv_title = document.getElementById("discussion-title");
+        
+        $.get("/discussion/" + e.target.getAttribute("id_user") , function(data) {
+            if (data.length == 0) {
+                const no_discu = document.createElement("p");
+                no_discu.innerText = "Aucun message entre vous deux.";
+                $("#discussion-title").after(no_discu);
+            } else {
+                const msg_list = document.createElement("ul");
+                msg_list.style.overflow = "scroll";
+                msg_list.id = "message-list";
+                msg_list.className += " conversation";
+                $('#discussion-title').after(msg_list);
+
+                for (let msg of data.msg) {
+                    const elt = document.createElement("li");
+                    elt.className = "message ";                    
+                    if (data.id_user == msg.id_user_from) {
+                        elt.className += "my_msg"
+                        elt.textContent += "[Moi] " + msg.text;
+                    } else {
+                        elt.className += "your_msg"
+                        elt.textContent += "[Toi] " + msg.text;
+                    }
+                    elt.className += " conversation"
+                    msg_list.appendChild(elt);
+                }
+                const input = document.createElement("input");
+                input.id = "message-input";
+                input.className += " conversation";
+                input.placeholder = "Ecrire un nouveau message"
+                msg_list.after(input);
+                const send_btn = document.createElement("button");
+                send_btn.className += " conversation"
+                send_btn.innerText = ">";
+                send_btn.id = "send-button";
+                send_btn.setAttribute("id_user", e.target.getAttribute("id_user"));
+                send_btn.onclick = handle_click_send_button;
+                input.after(send_btn);
+            }
+        })
+    }));
+</script>
