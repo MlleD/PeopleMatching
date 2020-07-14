@@ -1,10 +1,14 @@
-h1 {
+h1, h2, a {
     display: inherit;
     justify-content: center;
 }
-
+#filter-choices {
+    display: inherit;
+    justify-content: center;
+}
 form {
     display: flex;
+    flex-wrap: wrap;
     height: inherit;
     width: max-content;
     margin: 0 auto;
@@ -16,4 +20,21 @@ form {
     display: inherit;
     flex-direction: inherit;
     align-items: center;
+}
+
+#search-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    column-gap: 0px;
+    row-gap: 0px;
+    grid-gap: 5px;
+    grid-auto-rows: min-content;
+    grid-auto-flow: row;
+}   
+
+#andor-section {
+    display: flex;
+    flex-direction: column;
+    background-color: rebeccapurple;
 }

@@ -8,7 +8,8 @@
     text-decoration: none;
     position: relative;
     margin-left: 40%;
-    transform: translate(-50%, -50%); 
+    transform: translate(-50%, -50%);
+    display: initial;
 }
 
 /* #search-bar {

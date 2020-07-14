@@ -12,7 +12,8 @@
 
 <body>
     <%- include('header', {id_user: id_user}); -%>
-    <h1>Recherche de profils</h1>
+    <h1>Recherche unicritère de profils</h1>
+    <a href="/search/multi">Plus de critères ici</a>
     <form id='search' method="GET">
         <select id="search-category-select" required>
             <option value="" selected>-- Choisir --</option>

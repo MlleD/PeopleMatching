@@ -4,8 +4,8 @@ const database = config.database;
 
 const { body, validationResult } = require('express-validator/check');
 const { sanitizeBody } = require('express-validator/filter');
-const { request } = require('express');
-const { data } = require('jquery');
+const { request, json } = require('express');
+const { data, getJSON } = require('jquery');
 const e = require('express');
 
 // ---- FONCTIONS HELPER ----
@@ -286,13 +286,16 @@ server.get('/search', async function (request, response) {
     }
 });
 
-server.post('/search', async function (request, response) {
-    async function get_query(request) {
-        if (request.body.category == 'interest') {
-            return `SELECT a.id_user, u.firstname, u.lastname, a.id_interest, i.category, i.name, a.degree 
+async function get_query(request) {
+    if (request.body.category == 'interest') {
+        return `SELECT a.id_user, u.firstname, u.lastname, a.id_interest, i.category, i.name, a.degree 
+        FROM Appreciate as a 
             FROM Appreciate as a 
+        FROM Appreciate as a 
+        INNER JOIN Interest as i ON i.id_interest = a.id_interest 
             INNER JOIN Interest as i ON i.id_interest = a.id_interest 
-            INNER JOIN User as u ON a.id_user = u.id_user 
+        INNER JOIN Interest as i ON i.id_interest = a.id_interest 
+        INNER JOIN User as u ON a.id_user = u.id_user 
             WHERE i.category = '` + request.body.name + "' AND i.name LIKE '%" + request.body.input + "%' AND a.id_user <> '" + request.session.user.id_user + "'";
         } else { // request.body.category == 'person'
             if (request.body.name != 'age') {
@@ -307,6 +310,8 @@ server.post('/search', async function (request, response) {
             }
         }
     }
+
+server.post('/search', async function (request, response) {
     if (request.body.year) {
         database.query(await get_query(request), async function (err, results) {
             if (err) throw err;
@@ -332,6 +337,70 @@ server.post('/search', async function (request, response) {
             })
         })
     }
+});
+
+server.get('/search/multi', function (request, response){
+    if (!request.session.user) {
+        response.sendStatus(404);
+        return;   
+    }
+    response.render("searchmulti", {
+        id_user: request.session.user.id_user
+    })
+});
+
+server.post('/search/multi', function (request, response) {
+    let query_string = "SELECT DISTINCT a.id_user, u.firstname, u.lastname, age(u.birthdate) as age, a.id_interest, i.category, i.name, a.degree FROM Appreciate as a INNER JOIN Interest as i ON i.id_interest = a.id_interest INNER JOIN User as u ON a.id_user = u.id_user WHERE "
+
+    let andor = request.body.andor.map(elt => elt == "et" ? "AND" : "OR");
+    let cat = request.body.category
+    let subcat = request.body.subcategory
+    let dat = request.body.datum
+
+    for (let i = 0; i < cat.length; i++) {
+        if (cat[i] == "Âge") {
+            query_string += "age(birthdate) " + subcat[i] + " " + dat[i]
+        } else if (cat[i] == "Personne") {
+            query_string += subcat[i] + " LIKE '%" + dat[i] + "%'"
+        } else { // Si centre d'intérêt
+            query_string += "(i.category = '" + subcat[i]
+            query_string += "' AND i.name = '" + dat[i] + "')"
+        }
+        if (i < cat.length - 1 && andor != undefined)
+            query_string += " " + andor[i] + " "
+    }
+
+    database.query(query_string, function (err, results) {
+        if (err) throw err
+        let matchmap = []
+        let personmap = new Map()
+        for (let elt of results) {
+            matchmap.push({
+                id_user: elt.id_user, 
+                category: elt.category, 
+                name: elt.name, 
+                degree: elt.degree
+            })
+            personmap.set(elt.id_user, {
+                firstname: elt.firstname,
+                lastname: elt.lastname,
+                age: elt.age
+            })
+        }
+
+        let jsonpersons = []
+        for (let id of personmap) {
+            jsonpersons.push({
+                id_user: id,
+                infos: JSON.stringify(personmap[id])
+            })
+        }
+        
+        response.send({
+            matches: JSON.stringify(matchmap),
+            persons: JSON.stringify(jsonpersons)
+        })
+    })
 });
 
 server.get('/about', function (request, response) {
@@ -374,7 +443,7 @@ server.get('/message/:id_user', async function (request, response) {
 server.get('/discussion/:otherid', function (request, response) {
     const query = "SELECT id_user_from, id_user_to, date, text FROM Message WHERE (id_user_from = " + request.session.user.id_user + " AND id_user_to = " + request.params.otherid + ") OR (id_user_from = " + request.params.otherid + " AND id_user_to = " + request.session.user.id_user + ")";
     database.query(query, function (err, res) {
-        if (err) throw err; console.log(res)
+        if (err) throw err;
         response.send({
             msg: res, 
             id_user:request.session.user.id_user

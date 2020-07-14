@@ -1,34 +1,5 @@
 A faire
 - Corriger les éventuels bugs dans le site web
-- Revoir les templates : 
-- - Profil : ajouter l'ajout d'un centre d'intérêt quand on en a pas 
-- - Changement du profil
-- Travail sur les templates :
-- - Page du profil (haut vers bas) :
-- - - Titre : nom, prénom
-- - - Sous-titre : pays, âge, sexe
-- - - Courte description (+ changement de texte)
-- - - Centres d'intérêt (+ add, - remove)
-- - - Mes photos (carousel, + add - remove)
-- - - Les personnes que j'ai liké (carousel, + add, - remove)
-- Gestion des sessions :
-- - Modification de la BDD pour gérer les infos :
-- - - Description sur le profil de l'utilisateur
-- - - Stockage des photos
-
-A faire si tout le reste est fait :
-- - Recherche multi_critère :
-- - Si on veut faire une recherche multicritère, on appuie sur le bouton filtre.
-    à droite du bouton qui envoie la requête.
-    Ce bouton filtre redirige vers une page permettant de sélectionner les
-    critères voulus. Si quelque chose était écrit dans la barre de recherche
-    au moment du clic, alors ce quelque chose reste écrit dans la barre de 
-    recherche après le changement de page. On reste sur un <select> pour P et 
-    pour CI.
-    Pour faciliter la lecture des choix, on met une option par select et 
-    par ligne. Le bouton "Filtre" ajoute une ligne de choix : opérations 
-    logiques ET et OU Possible entre les lignes
-- - Messagerie entre utilisateurs
 
 Fait:
 27/06/2020: BDD PeopleMatching
@@ -158,3 +129,76 @@ Un contact est un utilisateur qui vous like et que vous likez
 [Messagerie]
 - Enregistrement des messages dans la BDD
 - Finition de l'apparence css des messages
+
+[Recherche] Recherche multi_critères :
+- - Si on veut faire une recherche multicritère, on appuie sur le bouton filtre.
+    à droite du bouton qui envoie la requête.
+    Ce bouton filtre redirige vers une page permettant de sélectionner les
+    critères voulus. Si quelque chose était écrit dans la barre de recherche
+    au moment du clic, alors ce quelque chose reste écrit dans la barre de 
+    recherche après le changement de page. On reste sur un <select> pour P et 
+    pour CI.
+    Pour faciliter la lecture des choix, on met une option par select et 
+    par ligne. Le bouton "Filtre" ajoute une ligne de choix : opérations 
+    logiques ET et OU Possible entre les lignes
+
+-- TODO : lier le select name au select category juste avant.
+rewrite les functions event handling pour qu'elles reefrent à des noeuds frères
+plutôt que les getElementbyId qui renvoient le premier id qui match... 
+
+Point algo pour faire l'affichage correct des catégories et des noms de CI
+sign select : < = > pour comparer l'age
+Cat select : ""/intéret/personne
+- valeurs init dans le template
+- quand je change la valeur de cat select, je mets à jour les options dans 
+le name select.
+Name select : ... selon la valeur de cat select
+- init avec les valeurs retournées par un ajax type get 
+- si la val courante de name select est "age", alors on ajoute un sign select
+- mise à jour des options : quand on change de catégorie, le name select
+doit seulement contenir les options de la categorie dans le cat select
+(ce qui inclut la suppression des options d'une autre categorie)
+
+Cas de figure : 
+cas init : les deux select ont la valeur "choisir". le cat select possède
+en option : choisir, ci, personne
+clic sur cat select -> je selectionne une des deux catégories. Dans le name
+select, les options se mettent à jour selon la val selectionnée dans le cat select. 
+clic sur une autre option dans cat select : dans le name select, les options
+de l'ancienne cat sont supprimées et on ajoute les options pour la bonne catégorie
+clic sur name select : si c'est age alors 1 select de comparaison avec le 
+sign select.
+
+11/07/2020 
+Je laisse une page pour la recherche à un critère. Cette page est accessible 
+depuis le "Recherche" du menu de navigation en haut de page. La page de 
+recherche multicritère est accessible depuis la page de recherche à un 
+critère.
+[Recherche à un critère]
+- Ajout d'un lien pour aller vers la page de recherche multicritère
+[Recherche multicritère]
+- Visuel fonctionnel pour la recherche multicritère.
+- Lien pour retourner à la page de recherche à un critère
+- Contenu de la page : (haut vers bas et gauche vers droite)
+    - Titre : Recherche multicritère de profil
+    - Liens d'ajout de champs de recherche : Age, Perso, CI
+    - Un bouton pour valider le formulaire
+    - Formulaire sur fond couleur lavande. Son contenu augmente
+    quand on clique sur un des liens d'ajout, et un survol
+    sur un des champs ajoutés fait apparaître un bouton supprimer
+    à droite du champ.
+    - Un champ de recherche contient le Nom du fieldset (âge,
+    personnel, centre d'intérêt), un select pour les sous-
+    categories et un input de la chaîne de caractères à chercher
+
+13/07/2020
+[Recherche multicritère]
+- Requête POST (écrit en js et pas avec jquery) pour envoyer la
+requête de résultats de recherche et recevoir les résultats de recherche
+
+14/07/2020
+[Recherche multicritère]
+- Recentrer le nom du site sur la page de recherche
+- Partie backend pour recevoir la requête et renvoyer le résultat
+- Affichage des résultats de recherche dans l'UI
+- Affichage des champs de recherche en colonne sans limitation de hauteur

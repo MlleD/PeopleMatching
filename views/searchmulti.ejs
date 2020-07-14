@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche multicritère</title>
+    <link rel="stylesheet" type="text/css" href="../header.css" />
+    <link rel="stylesheet" type="text/css" href="../footer.css" />
+    <link rel="stylesheet" type="text/css" href="../searchmulti.css" />
+</head>
+
+<body>
+    <%- include('header', {id_user: id_user}); -%>
+    <h1>Recherche multicritère de profils</h1>
+
+    <div id="filter-choices">
+        <label for="">Ajouter : </label>
+        <a href="" class="filter" id="age-filter">-- Age --</a>
+        <a href="" class="filter" id="perso-filter">-- Personne --</a>
+        <a href="" class="filter" id="ci-filter">-- Centre d'intérêt --</a>
+    </div>
+    <a href="/search">Retour à la recherche à un critère</a>
+    <form id='search' method="POST">
+    </form>
+    <div id="results">
+        <div class="results-item" id="results-title"></div>
+        <div class="results-item" id="results-content"></div>    
+    </div>
+    <script src="/jquery-3.3.1.min.js"></script>
+    <script>
+        create_filters ()
+        function add_filter_row (title, datalist) {
+            const fieldset = document.createElement("fieldset")
+            const options = document.createElement("select")
+            const input = document.createElement("input")
+            const delet = document.createElement("button")
+            const legend = document.createElement("legend")
+
+            legend.textContent = title
+            fieldset.appendChild(legend)
+
+            for (let item of datalist) {
+                const i = document.createElement("option")
+                i.text = item
+                options.appendChild(i)
+            }
+            fieldset.appendChild(options)
+
+            input.placeholder = "Je recherche..."
+            input.required = true
+            fieldset.appendChild(input)
+            
+            const form = document.getElementById("search");
+            form.appendChild(fieldset)
+
+            delet.id = "delete-button"
+            delet.textContent = "Supprimer"
+
+            fieldset.onmouseenter = function (e) {
+                fieldset.appendChild(delet)
+            }
+            fieldset.onmouseleave = function (e) {
+                const del = document.getElementById("delete-button");
+                if (del != null) {
+                    del.remove()
+                }
+            }
+            delet.onclick = function (e) {
+                e.preventDefault()
+
+                let parentprev = e.target.parentNode.previousElementSibling;
+                let parentnext = e.target.parentNode.nextElementSibling;
+
+                //Suppression du andor-select
+                if(parentprev != null && parentprev.className == "andor-select")
+                    parentprev.remove()
+                if(parentnext != null && parentnext.className == "andor-select")
+                    parentnext.remove()
+
+                //Suppression du fieldset contenant le champ à supprimer
+                e.target.parentNode.remove()
+
+                //Suppression du bouton OK du formulaire
+                let form = document.getElementById("search")
+                let ok_button = document.getElementById("ok-button")
+                if (ok_button != null && form.childElementCount == 1) {
+                    ok_button.remove();
+                }
+            }
+        }
+
+        function create_filters () {
+            let f = document.getElementById("age-filter")
+            f.onclick = function (e){
+                e.preventDefault() // eviter le rechargement de la page
+                filter_click(e)
+                add_filter_row ("Âge", ["<", "=", ">"])
+            }
+            f = document.getElementById("perso-filter")
+            f.onclick = function (e){
+                e.preventDefault()
+                filter_click(e)
+                add_filter_row("Personne", ["email", "firstname", "lastname", "country", "sex"])
+            }
+            f = document.getElementById("ci-filter")
+            f.onclick = function (e){
+                e.preventDefault()
+                filter_click(e)
+                add_filter_row("Centre d'intérêt", ["cinema", "cuisine", "danse", "musique", "sport"])
+            }
+        }
+        
+        let form = document.getElementById("search")
+        form.onsubmit = function(e) {
+            e.preventDefault()
+            let array = extract_data()
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "/search/multi", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var json = JSON.parse(xhr.responseText);
+                    let matches = JSON.parse(json.matches)
+                    let persons = JSON.parse(json.persons)
+                    let display = document.getElementById("results-content")
+                    let title = document.getElementById("results-title")
+
+                    if (persons.length == 0) {
+                        display.innerHTML = "<p>Aucun résultat. Veuillez écrire autre chose.</p>"
+                        return;
+                    }
+                    display.innerHTML = "<ul>"
+                    title.innerHTML = "<h1>Résultats</h1>"
+
+                    for (let person of persons) { 
+                        let id = person["id_user"][0]
+                        display.innerHTML += "<li><a href=/profile/" + id + "> (Profil) </a> " 
+                        display.innerHTML += person["id_user"][1].firstname 
+                        display.innerHTML += " " + person["id_user"][1].lastname + ", "
+                        display.innerHTML += person["id_user"][1].age + " ans  : goûts pour "
+                        for (let me of matches.filter(e=> e.id_user == id)) {
+                            display.innerHTML += me.name + " à " + me.degree + "/5, "
+                        }
+                        //on enlève la virgule en fin de ligne 
+                        display.innerHTML = display.innerHTML.slice(0, -2)
+
+                        display.innerHTML += "</li>\n"
+                    }
+                    display.innerHTML += "</ul>"
+                }
+            };
+
+            let data = JSON.stringify({
+                category: array[0],
+                subcategory: array[1],
+                datum: array[2],
+                andor: extract_andor()
+            });
+            xhr.send(data);
+        }
+            
+        function filter_click(e) {
+            e.preventDefault()
+            if(form.childElementCount == 0) {
+                const ok_button = document.createElement("button")
+                ok_button.id = "ok-button"
+                ok_button.textContent = "Chercher"
+                form.appendChild(ok_button)
+            } else if(form.childElementCount > 1) {
+                const andor_select = document.createElement("select");
+                andor_select.className = "andor-select";
+                andor_select.required = true;
+                let and = document.createElement("option");
+                and.textContent = "et"
+                and.className = "andor"
+                andor_select.appendChild(and)
+                let or = document.createElement("option");
+                or.textContent = "ou"
+                or.className = "andor"
+                andor_select.appendChild(or)
+                form.appendChild(andor_select)
+            }
+        }
+
+        function extract_data () {
+            let all_legends = document.getElementsByTagName("legend")
+            let cat = [], subcat = [], datum = []
+            for (let i = 0; i < all_legends.length; i++) {
+                cat.push(all_legends[i].textContent)
+                subcat.push(all_legends[i].nextElementSibling.value)
+
+                let val = all_legends[i].nextElementSibling.nextElementSibling.value
+                if (cat == "Âge") {
+                    val = parseInt(val, 10)
+                }
+                
+                datum.push(val)
+            }
+            return [cat, subcat, datum]
+        }
+
+        function extract_andor () {
+            let all_andors = document.getElementsByClassName("andor-select")
+            let arr = []
+            for (let aa of all_andors) {
+                arr.push(aa.options[aa.selectedIndex].value)
+            }
+            return arr;
+        }
+
+        </script>
+    <%- include('footer'); -%>
+</body>
+</html>
