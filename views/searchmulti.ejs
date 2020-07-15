@@ -95,19 +95,25 @@
             f.onclick = function (e){
                 e.preventDefault() // eviter le rechargement de la page
                 filter_click(e)
-                add_filter_row ("Âge", ["<", "=", ">"])
+                $.getJSON("/search/multi?category=age", function (results) {
+                    add_filter_row("Age", results.categories)
+                })
             }
             f = document.getElementById("perso-filter")
             f.onclick = function (e){
                 e.preventDefault()
                 filter_click(e)
-                add_filter_row("Personne", ["email", "firstname", "lastname", "country", "sex"])
+                $.getJSON("/search/multi?category=person", function (results) {
+                    add_filter_row("Personne", results.categories.map(elt => elt.category))
+                })
             }
             f = document.getElementById("ci-filter")
-            f.onclick = function (e){
+            f.onclick = async function (e){
                 e.preventDefault()
                 filter_click(e)
-                add_filter_row("Centre d'intérêt", ["cinema", "cuisine", "danse", "musique", "sport"])
+                $.getJSON("/search/multi?category=interest", function (results) {
+                    add_filter_row("Centre d'intérêt", results.categories.map(elt => elt.category))
+                })
             }
         }
         

@@ -344,9 +344,37 @@ server.get('/search/multi', function (request, response){
         response.sendStatus(404);
         return;   
     }
-    response.render("searchmulti", {
-        id_user: request.session.user.id_user
-    })
+    if (!request.query) {
+        response.sendStatus(404)
+        return;
+    }
+    if (request.query.category) {
+        let query;
+        if (request.query.category == "person") {
+            query = "SELECT Column_name as category FROM INFORMATION_SCHEMA.COLUMNS where table_name = 'User' AND Column_name not in ('id_user', 'password', 'birthdate')" 
+        } else if (request.query.category == "interest") {
+            query = "SELECT distinct(category) FROM Interest"
+        } else { // category = age
+            response.status(200).send({
+                categories: ["<", "=", ">"],
+                id_user: request.session.user.id_user,
+                search_results: []
+            })
+            return;
+        }
+
+        database.query(query, function (err, data) {
+            response.status(200).send({
+                categories: data,
+                id_user: request.session.user.id_user,
+                search_results: []
+            });
+        })
+    } else {
+        response.render("searchmulti", {
+            id_user: request.session.user.id_user
+        })
+    }
 });
 
 server.post('/search/multi', function (request, response) {
