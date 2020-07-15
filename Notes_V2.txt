@@ -1,0 +1,34 @@
+Version 2 du site
+
+BDD
+- Revue de la modélisation
+- Revue du script SQL de création de tables
+- Ajout d'un script SQL pour remplir les tables
+- Révision des routes faisant des requêtes à cette BDD
+
+Templates
+- Ajout d'un header et d'un footer sur toutes les pages
+Le header contient des liens de navigations dans le site.
+Le footer contient un copyright et la mention "fait avec ❤️"
+- Ajout de deux pages : contact (email) et à propos de
+
+Recherche de profils unicritère et multicritère selon des
+caractéristiques personnelles (prénom, age, ville etc.)
+ou selon des centres d'intérêt
+
+Like = Appréciation
+- On peut like un autre utilisateur sur sa page de profil
+
+Profil : 
+- Ajout d'une description, de l'upload d'images, de
+modification globales ou par section
+
+Messagerie
+- Envoi et réception des contacts. Un contact est une 
+personne que vous likez et qui vous like aussi.
+
+Sécurité
+- Gestion des sessions utilisateur
+- Erreur 404 lors de tentatives d'accès aux pages spécifiques
+des personnes connectées
+

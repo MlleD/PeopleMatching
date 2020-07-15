@@ -202,3 +202,9 @@ requête de résultats de recherche et recevoir les résultats de recherche
 - Partie backend pour recevoir la requête et renvoyer le résultat
 - Affichage des résultats de recherche dans l'UI
 - Affichage des champs de recherche en colonne sans limitation de hauteur
+
+15/07/2020
+[Recherche multicritère]
+- Requêtes html type get pour lister les catégories (âge, personne, intérêt)
+[Projet]
+- Fin du projet. Tag V2 pour toutes les révisions faites
