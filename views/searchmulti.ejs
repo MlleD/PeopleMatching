@@ -136,24 +136,24 @@
                         display.innerHTML = "<p>Aucun résultat. Veuillez écrire autre chose.</p>"
                         return;
                     }
-                    display.innerHTML = "<ul>"
+                    let ulist = document.createElement("ul")
+                    display.append(ulist)
                     title.innerHTML = "<h1>Résultats</h1>"
 
                     for (let person of persons) { 
                         let id = person["id_user"][0]
-                        display.innerHTML += "<li><a href=/profile/" + id + "> (Profil) </a> " 
-                        display.innerHTML += person["id_user"][1].firstname 
-                        display.innerHTML += " " + person["id_user"][1].lastname + ", "
-                        display.innerHTML += person["id_user"][1].age + " ans  : goûts pour "
+                        let li = document.createElement("li")
+                        li.innerHTML += "<a href=/profile/" + id + "> (Profil) </a> " 
+                        li.innerHTML += person["id_user"][1].firstname 
+                        li.innerHTML += " " + person["id_user"][1].lastname + ", "
+                        li.innerHTML += person["id_user"][1].age + " ans  : goûts pour "
                         for (let me of matches.filter(e=> e.id_user == id)) {
-                            display.innerHTML += me.name + " à " + me.degree + "/5, "
+                            li.innerHTML += me.name + " à " + me.degree + "/5, "
                         }
                         //on enlève la virgule en fin de ligne 
-                        display.innerHTML = display.innerHTML.slice(0, -2)
-
-                        display.innerHTML += "</li>\n"
+                        li.innerHTML = li.innerHTML.slice(0, -2)
+                        ulist.append(li)
                     }
-                    display.innerHTML += "</ul>"
                 }
             };
 
