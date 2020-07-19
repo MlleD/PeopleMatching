@@ -220,3 +220,5 @@ requête de résultats de recherche et recevoir les résultats de recherche
     en enlever une
 - [Recherche multicritère]
 - - Typo : Âge au lieu de Age
+[Page contact]
+- Ajout email etudiant u-paris
