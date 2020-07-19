@@ -257,7 +257,7 @@ server.get('/search', async function (request, response) {
     }
     async function get_query(req) {
         if (req.query.category == 'person') {
-            return "SELECT Column_name as category FROM INFORMATION_SCHEMA.COLUMNS where table_name = 'User' AND Column_name not in ('id_user', 'password')"
+            return "SELECT Column_name as category FROM INFORMATION_SCHEMA.COLUMNS where table_schema = 'PeopleMatching' AND table_name = 'User' AND Column_name not in ('id_user', 'password')"
         } else if (req.query.category == 'interest') {
             return "SELECT distinct(category) FROM Interest"
         } else return "";
@@ -290,10 +290,6 @@ async function get_query(request) {
     if (request.body.category == 'interest') {
         return `SELECT a.id_user, u.firstname, u.lastname, a.id_interest, i.category, i.name, a.degree 
         FROM Appreciate as a 
-            FROM Appreciate as a 
-        FROM Appreciate as a 
-        INNER JOIN Interest as i ON i.id_interest = a.id_interest 
-            INNER JOIN Interest as i ON i.id_interest = a.id_interest 
         INNER JOIN Interest as i ON i.id_interest = a.id_interest 
         INNER JOIN User as u ON a.id_user = u.id_user 
             WHERE i.category = '` + request.body.name + "' AND i.name LIKE '%" + request.body.input + "%' AND a.id_user <> '" + request.session.user.id_user + "'";
@@ -351,7 +347,7 @@ server.get('/search/multi', function (request, response){
     if (request.query.category) {
         let query;
         if (request.query.category == "person") {
-            query = "SELECT Column_name as category FROM INFORMATION_SCHEMA.COLUMNS where table_name = 'User' AND Column_name not in ('id_user', 'password', 'birthdate')" 
+            query = "SELECT Column_name as category FROM INFORMATION_SCHEMA.COLUMNS where table_schema = 'PeopleMatching' AND table_name = 'User' AND Column_name not in ('id_user', 'password', 'birthdate')" 
         } else if (request.query.category == "interest") {
             query = "SELECT distinct(category) FROM Interest"
         } else { // category = age
@@ -386,7 +382,7 @@ server.post('/search/multi', function (request, response) {
     let dat = request.body.datum
 
     for (let i = 0; i < cat.length; i++) {
-        if (cat[i] == "Âge") {
+        if (cat[i] == "Age") {
             query_string += "age(birthdate) " + subcat[i] + " " + dat[i]
         } else if (cat[i] == "Personne") {
             query_string += subcat[i] + " LIKE '%" + dat[i] + "%'"

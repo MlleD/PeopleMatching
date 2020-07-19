@@ -208,3 +208,15 @@ requête de résultats de recherche et recevoir les résultats de recherche
 - Requêtes html type get pour lister les catégories (âge, personne, intérêt)
 [Projet]
 - Fin du projet. Tag V2 pour toutes les révisions faites
+
+19/07/2020
+[Correctifs sur la recherche]
+- Affichage catégorie Personne : préciser le table_schema = 'PeopleMatching'
+- [Recherche unicritère]
+- - Affichage des résultats avant le footer
+- [Recherche unicritère et multicritère]
+- - Les résultats ne s'affichent pas ou vide : corriger les requêtes SQL
+- - Les liens vers le profil des résultats ont 2 puces en début de ligne :
+    en enlever une
+- [Recherche multicritère]
+- - Typo : Âge au lieu de Age

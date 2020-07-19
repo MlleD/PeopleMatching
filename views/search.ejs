@@ -122,7 +122,7 @@
                     if (data.query_category == "interest") {
                         for (let res of data.search_results) {
                             let result = document.createElement('li');
-                            results_div.appendChild(result);
+                            res_title.appendChild(result);
                             let link = document.createElement("a");
                             link.setAttribute("href", "/profile/" + res.id_user);
                             link.innerHTML = "(Profil) "
@@ -133,7 +133,7 @@
                     } else { // catégorie personne                        
                         for (let res of data.search_results) {
                             let result = document.createElement('li');
-                            results_div.appendChild(result);
+                            res_title.appendChild(result);
 
                             let link = document.createElement('a');
                             link.setAttribute("href", "/profile/" + res.id_user);
