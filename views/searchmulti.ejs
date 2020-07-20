@@ -75,7 +75,7 @@
                 //Suppression du andor-select
                 if(parentprev != null && parentprev.className == "andor-select")
                     parentprev.remove()
-                if(parentnext != null && parentnext.className == "andor-select")
+                else if(parentnext != null && parentnext.className == "andor-select")
                     parentnext.remove()
 
                 //Suppression du fieldset contenant le champ à supprimer

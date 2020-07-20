@@ -222,3 +222,7 @@ requête de résultats de recherche et recevoir les résultats de recherche
 - - Typo : Âge au lieu de Age
 [Page contact]
 - Ajout email etudiant u-paris
+
+20/07/2020
+[Correctif sur la recherche multicritère]
+- Correctif sur la suppression des and/or 
